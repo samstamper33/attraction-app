@@ -15,8 +15,10 @@ Widget _buildMenuItem(
     onTap: () {
       if (isSelected) {
         Navigator.pop(context);
+      } else if (routeName == '/discover') {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> r) => false);
       } else {
-        Navigator.pushReplacementNamed(context, routeName);
+        Navigator.pushNamed(context, routeName);
       }
     },
   );
@@ -107,8 +109,8 @@ Drawer buildDrawer(BuildContext context, String currentRoute) {
                             ),
                           ],
                         ),
-                        DiscoverPage.route,
-                        currentRoute),
+                        '/discover',
+                        '/discover'),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 22.0),

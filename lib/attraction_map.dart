@@ -6,7 +6,8 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+// import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:flutter_map_marker_popup/extension_api.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,7 @@ import 'package:passmate/discover.dart';
 import 'package:passmate/poi.dart';
 import 'package:flutter/services.dart';
 import 'package:passmate/remote_services.dart';
-import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+// import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:passmate/poi_info_page.dart';
 import 'package:passmate/search_page.dart';
 import 'package:collection/collection.dart';
@@ -37,8 +38,10 @@ class AttractionMapPage extends StatefulWidget {
   String name;
   String accent;
   String image;
+  String tileId;
   String attractionId;
   late double boundsNorth;
+  late double orientation;
   late double boundsSouth;
   late double boundsEast;
   late double boundsWest;
@@ -50,9 +53,11 @@ class AttractionMapPage extends StatefulWidget {
       required this.accent,
       required this.name,
       required this.image,
+      required this.tileId,
       required this.logo,
       required this.boundsEast,
       required this.boundsNorth,
+      required this.orientation,
       required this.boundsSouth,
       required this.boundsWest,
       required this.longitude,
@@ -65,6 +70,74 @@ class AttractionMapPage extends StatefulWidget {
 class _AttractionMapState extends State<AttractionMapPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   // ignore: non_constant_identifier_names
+
+  MapboxMap? mapboxMap;
+  PointAnnotation? pointAnnotation;
+  PointAnnotationManager? pointAnnotationManager;
+
+  late CameraBoundsOptions cameraOptions = CameraBoundsOptions(
+    minZoom: 15,
+    // maxZoom: 20,
+    bounds: CoordinateBounds(
+      southwest: latlng.LatLng(
+        widget.boundsSouth,
+        widget.boundsWest,
+      ).toJson(),
+      northeast: latlng.LatLng(
+        widget.boundsNorth,
+        widget.boundsEast,
+      ).toJson(),
+      infiniteBounds: false,
+    ),
+  );
+
+  _onStyleLoaded(StyleLoadedEventData data) async {
+    await mapboxMap?.style.addSource(RasterSource(
+      id: "source",
+      tiles: [
+        "https://api.mapbox.com/v4/${widget.tileId}/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q"
+      ],
+      tileSize: 256,
+      scheme: Scheme.XYZ,
+      // bounds: [-180.0, -85.0, 180.0, 85.0],
+    ));
+    await mapboxMap?.style
+        .addLayer(RasterLayer(id: "layer", sourceId: "source"));
+  }
+
+  _onMapCreated(MapboxMap mapboxMap) async {
+    this.mapboxMap = mapboxMap;
+    mapboxMap.compass.updateSettings(settings);
+    mapboxMap.setBounds(cameraOptions);
+    mapboxMap.scaleBar.updateSettings(scaleSettings);
+    mapboxMap.attribution.updateSettings(attributionSettings);
+    mapboxMap.location.updateSettings(LocationComponentSettings(
+        locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
+    log('create annotation');
+    mapboxMap.annotations.createPointAnnotationManager().then((value) async {
+      pointAnnotationManager = value;
+      final ByteData bytes = await rootBundle.load('assets/passmate_logo.png');
+      final Uint8List list = bytes.buffer.asUint8List();
+      var carOptions = <PointAnnotationOptions>[];
+      log(createRandomPoint().toJson().toString());
+      for (var i = 0; i < 5; i++) {
+        carOptions.add(PointAnnotationOptions(
+            iconSize: 32, textField: 'SAMS MARKER', textColor: Colors.red.value,
+            geometry: createRandomPoint().toJson(), iconImage: 'assets/passmate_logo.png'));
+      }
+      log(carOptions.toString());
+      pointAnnotationManager!.createMulti(carOptions);
+    });
+  }
+
+  Point createRandomPoint() {
+    log(createRandomPosition().toString());
+    return Point(coordinates: createRandomPosition());
+  }
+
+  Position createRandomPosition() {
+    return Position(widget.longitude, widget.latitude);
+  }
 
   getAttraction() {
     Future<dynamic> get() async {
@@ -83,7 +156,7 @@ class _AttractionMapState extends State<AttractionMapPage> {
       // print(r.body);
       if (response.statusCode == 200) {
         print(widget.attractionId + 'hello');
-        return response.body;
+        // return response.body;
       } else {
         print(response.statusCode);
       }
@@ -125,6 +198,15 @@ class _AttractionMapState extends State<AttractionMapPage> {
     return get();
   }
 
+  var settings = CompassSettings(enabled: false);
+  var scaleSettings = ScaleBarSettings(enabled: false);
+  var attributionSettings = AttributionSettings(
+    position: OrnamentPosition.TOP_LEFT,
+    marginLeft: 100,
+    marginTop: 10,
+    clickable: false,
+    iconColor: 0xFF000000,
+  );
   List _availableFilterList = [];
   List _selectedFilters = [];
   List _filteredAttractionMap = [];
@@ -155,6 +237,9 @@ class _AttractionMapState extends State<AttractionMapPage> {
       // log('wassup $_filteredAttractionMap');
       // log('HELLO HELLO HELLO ' + filterResults.length.toString());
     });
+    // for (Point marker in markers) {
+    //   pointAnnotationManager!.createMulti(_filteredAttractionMap)
+    // }
   }
 
   // List<PointOfInterest>? pointsofinterest;
@@ -163,8 +248,8 @@ class _AttractionMapState extends State<AttractionMapPage> {
   // getJsonData() async{}
 
   // late String baseUrl;
-  late final MapController mapController;
-  late final PopupController _popupLayerController;
+  // late final MapController mapController;
+  // late final PopupController _popupLayerController;
   late final markerPositions = [
     _thisAttractionMapState.length,
     (index) => latlng.LatLng(_thisAttractionMapState[index]['latitude'],
@@ -187,9 +272,9 @@ class _AttractionMapState extends State<AttractionMapPage> {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _selectedindex = (-1);
     navigationIndex = (0);
-    _popupLayerController = PopupController();
+    // _popupLayerController = PopupController();
     // CustomPopupDisplay(thisAttractionMapState: _thisAttractionMapState, marker: List<Marker>);
-    mapController = MapController();
+    // mapController = MapController();
     _asyncAttractionMethod();
     _asyncAttractionMapMethod();
   }
@@ -199,11 +284,11 @@ class _AttractionMapState extends State<AttractionMapPage> {
   Widget build(BuildContext context) {
     // print(_thisAttractionState);
     // print('object');
-    if (_thisAttractionState['mapOrientation'] != null) {
-      mapController.rotate(_thisAttractionState['mapOrientation']);
-    }
+    // if (_thisAttractionState['mapOrientation'] != null) {
+    //   mapController.rotate(_thisAttractionState['mapOrientation']);
+    // }
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         drawer: buildAttractionDrawer(
             context,
             ModalRoute.of(context).toString(),
@@ -213,381 +298,371 @@ class _AttractionMapState extends State<AttractionMapPage> {
             widget.image),
         body: Builder(builder: (context) {
           return Stack(children: [
-            FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                    onTap: (tapPosition, point) {
-                      _popupLayerController.hideAllPopups(
-                          disableAnimation: false);
-                      _selectedindex = -1;
-                    },
-                    center: latlng.LatLng(widget.latitude, widget.longitude),
-                    maxBounds: LatLngBounds(
-                      latlng.LatLng(widget.boundsNorth, widget.boundsEast),
-                      latlng.LatLng(widget.boundsSouth, widget.boundsWest),
-                    ),
-                    zoom: 17.2,
-                    maxZoom: 18.4,
-                    rotation: _thisAttractionState['MapOrientation'] ?? 120,
-                    interactiveFlags:
-                        InteractiveFlag.pinchZoom | InteractiveFlag.drag),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://api.mapbox.com/styles/v1/passmate/ckyaksv1x06iq14p0i2tsx0ux/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q',
-                    additionalOptions: {
-                      'accessToken':
-                          'pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q',
-                      'id': 'passmate.ctl4ikw5'
-                    },
-                  ),
-                  CurrentLocationLayer(),
-                  PopupMarkerLayerWidget(
-                      options: PopupMarkerLayerOptions(
-                          popupAnimation: PopupAnimation.fade(
-                              duration: Duration(milliseconds: 300)),
-                          markerCenterAnimation: MarkerCenterAnimation(),
-                          // popupSnap: PopupSnap.mapBottom,
-                          popupBuilder: (BuildContext context, Marker marker) {
-                            final index = _thisAttractionMapState.indexWhere(
-                                (element) =>
-                                    element['latitude'] ==
-                                        marker.point.latitude &&
-                                    element['longitude'] ==
-                                        marker.point.longitude);
-                            final locationName =
-                                _thisAttractionMapState[index]['name'];
-                            final poiimage =
-                                _thisAttractionMapState[index]['image'];
-                            final hex =
-                                _thisAttractionMapState[index]['iconHex'];
-                            final coloredIcon =
-                                _thisAttractionMapState[index]['coloredIcon'];
-                            final type = _thisAttractionMapState[index]['type'];
-                            final id = _thisAttractionMapState[index]['id'];
-                            final icon = _thisAttractionMapState[index]
-                                ['iconUnselected'];
-                            final orientation =
-                                _thisAttractionState['mapOrientation'];
-                            final description =
-                                _thisAttractionMapState[index]['description'];
-                            final lon =
-                                _thisAttractionMapState[index]['longitude'];
-                            final lat =
-                                _thisAttractionMapState[index]['latitude'];
-                            String typeString;
-                            switch (type) {
-                              case 1:
-                                typeString = 'Rides';
-                                break;
-                              case 2:
-                                typeString = 'Water Rides';
-                                break;
-                              case 3:
-                                typeString = 'Animals';
-                                break;
-                              case 4:
-                                typeString = 'Aquatic Animals';
-                                break;
-                              case 5:
-                                typeString = 'Shops';
-                                break;
-                              case 6:
-                                typeString = 'Dining';
-                                break;
-                              case 7:
-                                typeString = 'Drinks';
-                                break;
-                              case 8:
-                                typeString = 'Treats';
-                                break;
-                              case 9:
-                                typeString = 'Shows';
-                                break;
-                              case 10:
-                                typeString = 'Attractions';
-                                break;
-                              case 11:
-                                typeString = 'Reptiles';
-                                break;
-                              case 12:
-                                typeString = 'Emergency';
-                                break;
-                              case 13:
-                                typeString = 'Games';
-                                break;
-                              case 14:
-                                typeString = 'Restrooms';
-                                break;
-                              case 15:
-                                typeString = 'Services';
-                                break;
-                              case 16:
-                                typeString = 'Entrance / Exit';
-                                break;
-
-                              default:
-                                typeString = 'Unknown';
-                            }
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 16),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => InfoPage(
-                                            type: typeString,
-                                            name: locationName,
-                                            image: poiimage,
-                                            description: description,
-                                            attractionId: widget.attractionId,
-                                            orientation: orientation,
-                                            icon: icon,
-                                            itemId: id,
-                                            longitude: lon,
-                                            latitude: lat,
-                                          )));
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color.fromARGB(60, 0, 0, 0),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: Offset(2, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
-                                  ),
-                                  width: 360,
-                                  height: 120,
-                                  child: Container(
-                                    // decoration: BoxDecoration(
-                                    //     borderRadius: BorderRadius.circular(12)),
-                                    child: Stack(children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              height: 120,
-                                              width: 120,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image:
-                                                        NetworkImage(poiimage)),
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(12),
-                                                    bottomLeft:
-                                                        Radius.circular(12)),
-                                              )),
-                                          Container(
-                                              width: 6,
-                                              decoration: BoxDecoration(
-                                                  color: Color(int.parse(
-                                                      '0xFF' +
-                                                          hex.toString())))),
-                                          Flexible(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 12, left: 24, top: 16),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    // transform: Matrix4.translationValues(-24, 0, 0),
-                                                    child: Text(
-                                                      locationName,
-                                                      style: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 14,
-                                                          color: Colors.black),
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.only(top: 8),
-                                                    child: Container(
-                                                      // transform: Matrix4.translationValues(-24, 0, 0),
-                                                      child: Text(
-                                                        typeString,
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black),
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Positioned(
-                                        top: 38,
-                                        left: 101,
-                                        child: Container(
-                                          // transform: Matrix4.translationValues(-24, 38, 0),
-                                          decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Color.fromARGB(
-                                                      30, 0, 0, 0),
-                                                  spreadRadius: 0,
-                                                  blurRadius: 8,
-                                                  offset: Offset(2, 4),
-                                                )
-                                              ],
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
-                                              color: Colors.white),
-                                          height: 44,
-                                          width: 44,
-                                          child: Center(
-                                            child: SizedBox(
-                                              width: 24,
-                                              height: 24,
-                                              child: Image.network(
-                                                coloredIcon,
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                          top: 48,
-                                          right: 12,
-                                          child: Container(
-                                            height: 24,
-                                            width: 24,
-                                            decoration: BoxDecoration(
-                                                color: Color(int.parse(
-                                                    '0xFF' + hex.toString())),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            child: Center(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  print('object');
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              InfoPage(
-                                                                type:
-                                                                    typeString,
-                                                                name:
-                                                                    locationName,
-                                                                description:
-                                                                    description,
-                                                                image: poiimage,
-                                                                attractionId: widget
-                                                                    .attractionId,
-                                                                itemId: id,
-                                                                icon: icon,
-                                                                orientation:
-                                                                    orientation,
-                                                                longitude: lon,
-                                                                latitude: lat,
-                                                              )));
-                                                },
-                                                child: Container(
-                                                  child: Icon(
-                                                    Icons.arrow_forward_ios,
-                                                    size: 16,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          popupSnap: PopupSnap.mapBottom,
-                          popupController: _popupLayerController,
-                          markerTapBehavior: MarkerTapBehavior.custom(
-                              (marker, PopupState popupState, popupController) {
-                            log('started call');
-                            final index = _filteredAttractionMap.indexWhere(
-                                (element) =>
-                                    element['latitude'] ==
-                                        marker.point.latitude &&
-                                    element['longitude'] ==
-                                        marker.point.longitude);
-                            log('got to setstate');
-                            setState(() {
-                              _selectedindex = index;
-                            });
-                            _popupLayerController.showPopupsOnlyFor([marker]);
-                            print(_selectedindex);
-                          }),
-                          selectedMarkerBuilder: (context, marker) =>
-                              Image.network(
-                                _filteredAttractionMap[_selectedindex]
-                                    ['iconSelected'],
-                              ),
-                          markers: List.generate(
-                              _filteredAttractionMap.length,
-                              (index) => Marker(
-                                    key: Key(index.toString()),
-                                    point: latlng.LatLng(
-                                        _filteredAttractionMap[index]
-                                            ['latitude'],
-                                        _filteredAttractionMap[index]
-                                            ['longitude']),
-                                    builder: (context) {
-                                      if (_selectedindex == index) {
-                                        return AnimatedContainer(
-                                          duration: Duration(milliseconds: 200),
-                                          child: Image.network(
-                                            _filteredAttractionMap[index]
-                                                ['iconSelected'],
-                                            height: 40,
-                                            width: 40,
-                                          ),
-                                        );
-                                      } else {
-                                        return AnimatedContainer(
-                                          duration: Duration(milliseconds: 200),
-                                          child: Image.network(
-                                            _filteredAttractionMap[index]
-                                                ['iconUnselected'],
-                                            height: 32,
-                                            width: 32,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    width: 36,
-                                    height: 36,
-                                    rotate: true,
-                                    anchorPos:
-                                        AnchorPos.align(AnchorAlign.bottom),
-                                  ))
-                          )),
-                ]),
+            MapWidget(
+                onStyleLoadedListener: _onStyleLoaded,
+                onSourceAddedListener: (sourceAddedEventData) {
+                  RasterLayer(id: 'attractionmap', sourceId: 'raster');
+                },
+                styleUri: 'mapbox://styles/passmate/clg1cjh0g001e01r36s2p69m8',
+                cameraOptions: CameraOptions(
+                    bearing: widget.orientation,
+                    center: latlng.LatLng(widget.latitude, widget.longitude)
+                        .toJson(),
+                    zoom: 16),
+                onMapCreated: _onMapCreated,
+                resourceOptions: ResourceOptions(
+                    accessToken:
+                        'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
+            // CurrentLocationLayer(),
+            // PopupMarkerLayerWidget(
+            //     options: PopupMarkerLayerOptions(
+            //         popupAnimation: PopupAnimation.fade(
+            //             duration: Duration(milliseconds: 300)),
+            //         markerCenterAnimation: MarkerCenterAnimation(),
+            //         // popupSnap: PopupSnap.mapBottom,
+            //         popupBuilder: (BuildContext context, Marker marker) {
+            //           final index = _thisAttractionMapState.indexWhere(
+            //               (element) =>
+            //                   element['latitude'] ==
+            //                       marker.point.latitude &&
+            //                   element['longitude'] ==
+            //                       marker.point.longitude);
+            //           final locationName =
+            //               _thisAttractionMapState[index]['name'];
+            //           final poiimage =
+            //               _thisAttractionMapState[index]['image'];
+            //           final hex =
+            //               _thisAttractionMapState[index]['iconHex'];
+            //           final coloredIcon =
+            //               _thisAttractionMapState[index]['coloredIcon'];
+            //           final type = _thisAttractionMapState[index]['type'];
+            //           final id = _thisAttractionMapState[index]['id'];
+            //           final icon = _thisAttractionMapState[index]
+            //               ['iconUnselected'];
+            //           final orientation =
+            //               _thisAttractionState['mapOrientation'];
+            //           final description =
+            //               _thisAttractionMapState[index]['description'];
+            //           final lon =
+            //               _thisAttractionMapState[index]['longitude'];
+            //           final lat =
+            //               _thisAttractionMapState[index]['latitude'];
+            //           String typeString;
+            //           switch (type) {
+            //             case 1:
+            //               typeString = 'Rides';
+            //               break;
+            //             case 2:
+            //               typeString = 'Water Rides';
+            //               break;
+            //             case 3:
+            //               typeString = 'Water Play';
+            //               break;
+            //             case 4:
+            //               typeString = 'Natural Wonders';
+            //               break;
+            //             case 5:
+            //               typeString = 'Animals';
+            //               break;
+            //             case 6:
+            //               typeString = 'Aquatic Animals';
+            //               break;
+            //             case 7:
+            //               typeString = 'Shops';
+            //               break;
+            //             case 8:
+            //               typeString = 'Dining';
+            //               break;
+            //             case 9:
+            //               typeString = 'Drinks';
+            //               break;
+            //             case 10:
+            //               typeString = 'Treats';
+            //               break;
+            //             case 11:
+            //               typeString = 'Shows';
+            //               break;
+            //             case 12:
+            //               typeString = 'Attractions';
+            //               break;
+            //             case 13:
+            //               typeString = 'Reptiles';
+            //               break;
+            //             case 14:
+            //               typeString = 'Emergency';
+            //               break;
+            //             case 15:
+            //               typeString = 'Games';
+            //               break;
+            //             case 16:
+            //               typeString = 'Restrooms';
+            //               break;
+            //             case 17:
+            //               typeString = 'Services';
+            //               break;
+            //             case 18:
+            //               typeString = 'Entrance / Exit';
+            //               break;
+            //             default:
+            //               typeString = 'Unknown';
+            //           }
+            //           return Padding(
+            //             padding: EdgeInsets.only(bottom: 16),
+            //             child: GestureDetector(
+            //               onTap: () {
+            //                 Navigator.of(context).push(MaterialPageRoute(
+            //                     builder: (context) => InfoPage(
+            //                           type: typeString,
+            //                           name: locationName,
+            //                           image: poiimage,
+            //                           description: description,
+            //                           attractionId: widget.attractionId,
+            //                           orientation: orientation,
+            //                           icon: icon,
+            //                           itemId: id,
+            //                           longitude: lon,
+            //                           latitude: lat,
+            //                         )));
+            //               },
+            //               child: Container(
+            //                 decoration: BoxDecoration(
+            //                   boxShadow: [
+            //                     BoxShadow(
+            //                       color: Color.fromARGB(60, 0, 0, 0),
+            //                       spreadRadius: 0,
+            //                       blurRadius: 4,
+            //                       offset: Offset(2, 4),
+            //                     )
+            //                   ],
+            //                   borderRadius: BorderRadius.circular(12),
+            //                   color: Colors.white,
+            //                 ),
+            //                 width: 360,
+            //                 height: 120,
+            //                 child: Container(
+            //                   // decoration: BoxDecoration(
+            //                   //     borderRadius: BorderRadius.circular(12)),
+            //                   child: Stack(children: [
+            //                     Row(
+            //                       mainAxisAlignment:
+            //                           MainAxisAlignment.start,
+            //                       crossAxisAlignment:
+            //                           CrossAxisAlignment.start,
+            //                       children: [
+            //                         Container(
+            //                             height: 120,
+            //                             width: 120,
+            //                             decoration: BoxDecoration(
+            //                               image: DecorationImage(
+            //                                   fit: BoxFit.cover,
+            //                                   image:
+            //                                       NetworkImage(poiimage)),
+            //                               borderRadius: BorderRadius.only(
+            //                                   topLeft:
+            //                                       Radius.circular(12),
+            //                                   bottomLeft:
+            //                                       Radius.circular(12)),
+            //                             )),
+            //                         Container(
+            //                             width: 6,
+            //                             decoration: BoxDecoration(
+            //                                 color: Color(int.parse(
+            //                                     '0xFF' +
+            //                                         hex.toString())))),
+            //                         Flexible(
+            //                           child: Padding(
+            //                             padding: const EdgeInsets.only(
+            //                                 right: 12, left: 24, top: 16),
+            //                             child: Column(
+            //                               crossAxisAlignment:
+            //                                   CrossAxisAlignment.start,
+            //                               children: [
+            //                                 Container(
+            //                                   alignment:
+            //                                       Alignment.topLeft,
+            //                                   // transform: Matrix4.translationValues(-24, 0, 0),
+            //                                   child: Text(
+            //                                     locationName,
+            //                                     style: GoogleFonts.inter(
+            //                                         fontWeight:
+            //                                             FontWeight.w600,
+            //                                         fontSize: 14,
+            //                                         color: Colors.black),
+            //                                     overflow:
+            //                                         TextOverflow.clip,
+            //                                   ),
+            //                                 ),
+            //                                 Container(
+            //                                   padding:
+            //                                       EdgeInsets.only(top: 8),
+            //                                   child: Container(
+            //                                     // transform: Matrix4.translationValues(-24, 0, 0),
+            //                                     child: Text(
+            //                                       typeString,
+            //                                       style:
+            //                                           GoogleFonts.inter(
+            //                                               fontWeight:
+            //                                                   FontWeight
+            //                                                       .w400,
+            //                                               fontSize: 14,
+            //                                               color: Colors
+            //                                                   .black),
+            //                                       overflow:
+            //                                           TextOverflow.clip,
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //                               ],
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ],
+            //                     ),
+            //                     Positioned(
+            //                       top: 38,
+            //                       left: 101,
+            //                       child: Container(
+            //                         // transform: Matrix4.translationValues(-24, 38, 0),
+            //                         decoration: BoxDecoration(
+            //                             boxShadow: [
+            //                               BoxShadow(
+            //                                 color: Color.fromARGB(
+            //                                     30, 0, 0, 0),
+            //                                 spreadRadius: 0,
+            //                                 blurRadius: 8,
+            //                                 offset: Offset(2, 4),
+            //                               )
+            //                             ],
+            //                             borderRadius:
+            //                                 BorderRadius.circular(24),
+            //                             color: Colors.white),
+            //                         height: 44,
+            //                         width: 44,
+            //                         child: Center(
+            //                           child: SizedBox(
+            //                             width: 24,
+            //                             height: 24,
+            //                             child: Image.network(
+            //                               coloredIcon,
+            //                               fit: BoxFit.contain,
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ),
+            //                     Positioned(
+            //                         top: 48,
+            //                         right: 12,
+            //                         child: Container(
+            //                           height: 24,
+            //                           width: 24,
+            //                           decoration: BoxDecoration(
+            //                               color: Color(int.parse(
+            //                                   '0xFF' + hex.toString())),
+            //                               borderRadius:
+            //                                   BorderRadius.circular(12)),
+            //                           child: Center(
+            //                             child: GestureDetector(
+            //                               onTap: () {
+            //                                 print('object');
+            //                                 Navigator.of(context).push(
+            //                                     MaterialPageRoute(
+            //                                         builder: (context) =>
+            //                                             InfoPage(
+            //                                               type:
+            //                                                   typeString,
+            //                                               name:
+            //                                                   locationName,
+            //                                               description:
+            //                                                   description,
+            //                                               image: poiimage,
+            //                                               attractionId: widget
+            //                                                   .attractionId,
+            //                                               itemId: id,
+            //                                               icon: icon,
+            //                                               orientation:
+            //                                                   orientation,
+            //                                               longitude: lon,
+            //                                               latitude: lat,
+            //                                             )));
+            //                               },
+            //                               child: Container(
+            //                                 child: Icon(
+            //                                   Icons.arrow_forward_ios,
+            //                                   size: 16,
+            //                                   color: Colors.white,
+            //                                 ),
+            //                               ),
+            //                             ),
+            //                           ),
+            //                         ))
+            //                   ]),
+            //                 ),
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //         popupSnap: PopupSnap.mapBottom,
+            //         popupController: _popupLayerController,
+            //         markerTapBehavior: MarkerTapBehavior.custom(
+            //             (marker, PopupState popupState, popupController) {
+            //           log('started call');
+            //           final index = _filteredAttractionMap.indexWhere(
+            //               (element) =>
+            //                   element['latitude'] ==
+            //                       marker.point.latitude &&
+            //                   element['longitude'] ==
+            //                       marker.point.longitude);
+            //           log('got to setstate');
+            //           setState(() {
+            //             _selectedindex = index;
+            //           });
+            //           _popupLayerController.showPopupsOnlyFor([marker]);
+            //           print(_selectedindex);
+            //         }),
+            //         selectedMarkerBuilder: (context, marker) =>
+            //             Image.network(
+            //               _filteredAttractionMap[_selectedindex]
+            //                   ['iconSelected'],
+            //             ),
+            //         markers: List.generate(
+            //             _filteredAttractionMap.length,
+            //             (index) => Marker(
+            //                   key: Key(index.toString()),
+            //                   point: latlng.LatLng(
+            //                       _filteredAttractionMap[index]
+            //                           ['latitude'],
+            //                       _filteredAttractionMap[index]
+            //                           ['longitude']),
+            //                   builder: (context) {
+            //                     if (_selectedindex == index) {
+            //                       return AnimatedContainer(
+            //                         duration: Duration(milliseconds: 200),
+            //                         child: Image.network(
+            //                           _filteredAttractionMap[index]
+            //                               ['iconSelected'],
+            //                           height: 40,
+            //                           width: 40,
+            //                         ),
+            //                       );
+            //                     } else {
+            //                       return AnimatedContainer(
+            //                         duration: Duration(milliseconds: 200),
+            //                         child: Image.network(
+            //                           _filteredAttractionMap[index]
+            //                               ['iconUnselected'],
+            //                           height: 32,
+            //                           width: 32,
+            //                         ),
+            //                       );
+            //                     }
+            //                   },
+            //                   width: 36,
+            //                   height: 36,
+            //                   rotate: true,
+            //                   anchorPos:
+            //                       AnchorPos.align(AnchorAlign.bottom),
+            //                 )))),
             Container(
               child: SizedBox(
                 height: 140,
@@ -685,58 +760,66 @@ class _AttractionMapState extends State<AttractionMapPage> {
                           hex = '00DFFF';
                           break;
                         case 3:
-                          typeString = 'Animals';
-                          hex = '56B447';
+                          typeString = 'Water Play';
+                          hex = '00DFFF';
                           break;
                         case 4:
-                          typeString = 'Aquatic Animals';
+                          typeString = 'Natural Wonders';
                           hex = '56B447';
                           break;
                         case 5:
+                          typeString = 'Animals';
+                          hex = '56B447';
+                          break;
+                        case 6:
+                          typeString = 'Aquatic Animals';
+                          hex = '56B447';
+                          break;
+                        case 7:
                           typeString = 'Shops';
                           hex = 'FF70C6';
                           break;
-                        case 6:
+                        case 8:
                           typeString = 'Dining';
                           hex = 'FFCE4B';
                           break;
-                        case 7:
+                        case 9:
                           typeString = 'Drinks';
                           hex = 'FFCE4B';
                           break;
-                        case 8:
+                        case 10:
                           typeString = 'Treats';
                           hex = 'FFCE4B';
                           break;
-                        case 9:
+                        case 11:
                           typeString = 'Shows';
                           hex = 'D55EFF';
                           break;
-                        case 10:
+                        case 12:
                           typeString = 'Attractions';
                           hex = '3ACCE1';
                           break;
-                        case 11:
+                        case 13:
                           typeString = 'Reptiles';
                           hex = '56B447';
                           break;
-                        case 12:
+                        case 14:
                           typeString = 'Emergency';
                           hex = 'FF515B';
                           break;
-                        case 13:
+                        case 15:
                           typeString = 'Games';
                           hex = '67B6FF';
                           break;
-                        case 14:
+                        case 16:
                           typeString = 'Restrooms';
                           hex = '40E0D0';
                           break;
-                        case 15:
+                        case 17:
                           typeString = 'Services';
                           hex = '40E0D0';
                           break;
-                        case 16:
+                        case 18:
                           typeString = 'Entrance / Exit';
                           hex = 'B2B7BA';
                           break;

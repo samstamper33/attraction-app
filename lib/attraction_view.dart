@@ -466,69 +466,77 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                     String hex;
                     switch (type) {
                       case 1:
-                        typeString = 'Rides';
-                        hex = 'FF774B';
-                        break;
-                      case 2:
-                        typeString = 'Water Rides';
-                        hex = '00DFFF';
-                        break;
-                      case 3:
-                        typeString = 'Animals';
-                        hex = '56B447';
-                        break;
-                      case 4:
-                        typeString = 'Aquatic Animals';
-                        hex = '56B447';
-                        break;
-                      case 5:
-                        typeString = 'Shops';
-                        hex = 'FF70C6';
-                        break;
-                      case 6:
-                        typeString = 'Dining';
-                        hex = 'FFCE4B';
-                        break;
-                      case 7:
-                        typeString = 'Drinks';
-                        hex = 'FFCE4B';
-                        break;
-                      case 8:
-                        typeString = 'Treats';
-                        hex = 'FFCE4B';
-                        break;
-                      case 9:
-                        typeString = 'Shows';
-                        hex = 'D55EFF';
-                        break;
-                      case 10:
-                        typeString = 'Attractions';
-                        hex = '3ACCE1';
-                        break;
-                      case 11:
-                        typeString = 'Reptiles';
-                        hex = '56B447';
-                        break;
-                      case 12:
-                        typeString = 'Emergency';
-                        hex = 'FF515B';
-                        break;
-                      case 13:
-                        typeString = 'Games';
-                        hex = '67B6FF';
-                        break;
-                      case 14:
-                        typeString = 'Restrooms';
-                        hex = '40E0D0';
-                        break;
-                      case 15:
-                        typeString = 'Services';
-                        hex = '40E0D0';
-                        break;
-                      case 16:
-                        typeString = 'Entrance / Exit';
-                        hex = 'B2B7BA';
-                        break;
+                          typeString = 'Rides';
+                          hex = 'FF774B';
+                          break;
+                        case 2:
+                          typeString = 'Water Rides';
+                          hex = '00DFFF';
+                          break;
+                        case 3:
+                          typeString = 'Water Play';
+                          hex = '00DFFF';
+                          break;
+                        case 4:
+                          typeString = 'Natural Wonders';
+                          hex = '56B447';
+                          break;
+                        case 5:
+                          typeString = 'Animals';
+                          hex = '56B447';
+                          break;
+                        case 6:
+                          typeString = 'Aquatic Animals';
+                          hex = '56B447';
+                          break;
+                        case 7:
+                          typeString = 'Shops';
+                          hex = 'FF70C6';
+                          break;
+                        case 8:
+                          typeString = 'Dining';
+                          hex = 'FFCE4B';
+                          break;
+                        case 9:
+                          typeString = 'Drinks';
+                          hex = 'FFCE4B';
+                          break;
+                        case 10:
+                          typeString = 'Treats';
+                          hex = 'FFCE4B';
+                          break;
+                        case 11:
+                          typeString = 'Shows';
+                          hex = 'D55EFF';
+                          break;
+                        case 12:
+                          typeString = 'Attractions';
+                          hex = '3ACCE1';
+                          break;
+                        case 13:
+                          typeString = 'Reptiles';
+                          hex = '56B447';
+                          break;
+                        case 14:
+                          typeString = 'Emergency';
+                          hex = 'FF515B';
+                          break;
+                        case 15:
+                          typeString = 'Games';
+                          hex = '67B6FF';
+                          break;
+                        case 16:
+                          typeString = 'Restrooms';
+                          hex = '40E0D0';
+                          break;
+                        case 17:
+                          typeString = 'Services';
+                          hex = '40E0D0';
+                          break;
+                        case 18:
+                          typeString = 'Entrance / Exit';
+                          hex = 'B2B7BA';
+                          break;
                       default:
                         typeString = 'Unknown';
                         hex = '2A2E43';
