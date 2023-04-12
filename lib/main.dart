@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:passmate/attraction_mapbox.dart';
 import 'package:passmate/discover.dart';
-import 'package:passmate/attraction_map.dart';
 import 'package:passmate/attraction_navigator.dart';
 import 'package:passmate/attraction_view.dart';
 import 'package:geolocator/geolocator.dart';

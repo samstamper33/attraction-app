@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:passmate/attraction_map.dart';
 import 'package:passmate/attraction_mapbox.dart';
 import 'package:passmate/attraction_view.dart';
 import 'package:passmate/attraction_loading.dart';
@@ -83,20 +82,6 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
           longitude: widget.longitude,
           latitude: widget.latitude,
           onItemTapped: _onItemTapped),
-      // FlutterMapPage(
-      //     name: widget.name,
-      //     accent: widget.accent,
-      //     image: widget.image,
-      //     orientation: widget.orientation,
-      //     logo: widget.logo,
-      //     tileId: widget.tileId,
-      //     boundsEast: widget.boundsEast,
-      //     boundsNorth: widget.boundsNorth,
-      //     boundsWest: widget.boundsWest,
-      //     boundsSouth: widget.boundsSouth,
-      //     attractionId: widget.attractionId,
-      //     longitude: widget.longitude,
-      //     latitude: widget.latitude),
       FullMap(
           name: widget.name,
           accent: widget.accent,

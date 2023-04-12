@@ -12,7 +12,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import 'package:in_app_webview/in_app_webview.dart';
-import 'package:passmate/attraction_map.dart';
 import 'package:passmate/attraction_view.dart';
 
 class InfoPage extends StatefulWidget {

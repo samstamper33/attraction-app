@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:passmate/attraction_view.dart';
-import 'package:passmate/attraction_map.dart';
 import 'package:passmate/widgets/sidenav.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import 'package:http/http.dart' as http;
