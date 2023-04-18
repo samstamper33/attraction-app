@@ -65,7 +65,27 @@ class FullMap extends StatefulWidget {
       required this.boundsWest,
       required this.longitude,
       required this.latitude});
-
+  CameraBoundsOptions cameraOptions() {
+    return CameraBoundsOptions(
+      maxZoom: 19.5,
+      minZoom: 15.5,
+      bounds: CoordinateBounds(
+        southwest: Point(
+          coordinates: Position(
+            boundsWest,
+            boundsSouth,
+          ),
+        ).toJson(),
+        northeast: Point(
+          coordinates: Position(
+            boundsEast,
+            boundsNorth,
+          ),
+        ).toJson(),
+        infiniteBounds: false,
+      ),
+    );
+  }
   @override
   State createState() => FullMapState();
 }
@@ -420,12 +440,19 @@ class FullMapState extends State<FullMap> {
 
   _onMapCreated(MapboxMap mapboxMap) {
     mapboxMap.compass.updateSettings(settings);
-    // mapboxMap.setBounds(cameraOptions);
+    mapboxMap.setBounds(widget.cameraOptions());
     mapboxMap.scaleBar.updateSettings(scaleSettings);
     mapboxMap.attribution.updateSettings(attributionSettings);
     print('onMapCreated called');
     this.mapboxMap = mapboxMap;
     log('create annotation');
+    mapboxMap.location.updateSettings(LocationComponentSettings(
+      showAccuracyRing: true,
+      puckBearingEnabled: true,
+      pulsingEnabled: true,
+      locationPuck: LocationPuck(
+          locationPuck2D: LocationPuck2D(
+          ))));
   }
 
   Point createRandomPoint() {
@@ -498,6 +525,21 @@ class FullMapState extends State<FullMap> {
 
   var settings = CompassSettings(enabled: false);
   var scaleSettings = ScaleBarSettings(enabled: false);
+  // final cameraOptions = CameraBoundsOptions(
+  //   maxZoom: 19.5,
+  //   minZoom: 15.5,
+  //   bounds: CoordinateBounds(southwest: Point(
+  //               coordinates: Position(
+  //             late widget.boundsSouth,
+  //             widget.boundsWest,
+  //           )).toJson(),
+  //           northeast: Point(
+  //               coordinates: Position(
+  //             widget.boundsNorth,
+  //             widget.boundsEast,
+  //           )).toJson(),
+  //           infiniteBounds: false)
+  // );
   var attributionSettings = AttributionSettings(
     position: OrnamentPosition.TOP_LEFT,
     marginLeft: 100,
