@@ -8,11 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:passmate/widgets/sidenav.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import 'package:in_app_webview/in_app_webview.dart';
 import 'package:passmate/discover.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter_map/flutter_map.dart';
+// import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:passmate/attraction_navigator.dart';
 
@@ -22,6 +23,7 @@ class AttractionViewPage extends StatefulWidget {
   String attractionId;
   String logo;
   String accent;
+  String tileId;
   String name;
   String image;
   late double longitude;
@@ -33,6 +35,7 @@ class AttractionViewPage extends StatefulWidget {
       required this.name,
       required this.logo,
       required this.accent,
+      required this.tileId,
       required this.longitude,
       required this.latitude,
       required this.onItemTapped});
@@ -43,6 +46,7 @@ class AttractionViewPage extends StatefulWidget {
 
 class _AttractionViewPageState extends State<AttractionViewPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  MapboxMap? mapboxMap;
   bool isCollapsed = true;
   getAttraction() {
     Future<dynamic> get() async {
@@ -77,6 +81,42 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     setState(() {
       _thisAttractionState = decodedAttraction;
     });
+  }
+  var settings = CompassSettings(enabled: false);
+  var scaleSettings = ScaleBarSettings(enabled: false);
+  var attributionSettings = AttributionSettings(
+    position: OrnamentPosition.TOP_LEFT,
+    marginLeft: 100,
+    marginTop: 300,
+    clickable: false,
+    iconColor: 0xFF000000,
+  );
+
+    _onStyleLoaded(StyleLoadedEventData data) async {
+    print('onStyleLoaded called');
+    await mapboxMap?.style.addSource(RasterSource(
+      id: "source",
+      tiles: [
+        "https://api.mapbox.com/v4/${widget.tileId}/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q"
+      ],
+      tileSize: 256,
+      scheme: Scheme.XYZ,
+      minzoom: 15,
+      maxzoom: 19,
+      // boun, 180.0, 85.0],
+    ));
+    await mapboxMap?.style
+        .addLayer(RasterLayer(id: "layer", sourceId: "source"));
+  }
+
+  _onMapCreated(MapboxMap mapboxMap) {
+    mapboxMap.compass.updateSettings(settings);
+    // mapboxMap.setBounds(widget.cameraOptions());
+    mapboxMap.scaleBar.updateSettings(scaleSettings);
+    mapboxMap.attribution.updateSettings(attributionSettings);
+    print('onMapCreated called');
+    this.mapboxMap = mapboxMap;
+    log('create annotation');
   }
 
   getOffers() {
@@ -180,12 +220,12 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
   //   });
   // }
 
-  late final MapController mapController;
+  // late final MapController mapController;
 
   @override
   void initState() {
     super.initState();
-    mapController = MapController();
+    // mapController = MapController();
     baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
     _asyncAttractionMethod();
     // navigationIndex = (0);
@@ -465,77 +505,77 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                     String hex;
                     switch (type) {
                       case 1:
-                          typeString = 'Rides';
-                          hex = 'FF774B';
-                          break;
-                        case 2:
-                          typeString = 'Water Rides';
-                          hex = '00DFFF';
-                          break;
-                        case 3:
-                          typeString = 'Water Play';
-                          hex = '00DFFF';
-                          break;
-                        case 4:
-                          typeString = 'Natural Wonders';
-                          hex = '56B447';
-                          break;
-                        case 5:
-                          typeString = 'Animals';
-                          hex = '56B447';
-                          break;
-                        case 6:
-                          typeString = 'Aquatic Animals';
-                          hex = '56B447';
-                          break;
-                        case 7:
-                          typeString = 'Shops';
-                          hex = 'FF70C6';
-                          break;
-                        case 8:
-                          typeString = 'Dining';
-                          hex = 'FFCE4B';
-                          break;
-                        case 9:
-                          typeString = 'Drinks';
-                          hex = 'FFCE4B';
-                          break;
-                        case 10:
-                          typeString = 'Treats';
-                          hex = 'FFCE4B';
-                          break;
-                        case 11:
-                          typeString = 'Shows';
-                          hex = 'D55EFF';
-                          break;
-                        case 12:
-                          typeString = 'Attractions';
-                          hex = '3ACCE1';
-                          break;
-                        case 13:
-                          typeString = 'Reptiles';
-                          hex = '56B447';
-                          break;
-                        case 14:
-                          typeString = 'Emergency';
-                          hex = 'FF515B';
-                          break;
-                        case 15:
-                          typeString = 'Games';
-                          hex = '67B6FF';
-                          break;
-                        case 16:
-                          typeString = 'Restrooms';
-                          hex = '40E0D0';
-                          break;
-                        case 17:
-                          typeString = 'Services';
-                          hex = '40E0D0';
-                          break;
-                        case 18:
-                          typeString = 'Entrance / Exit';
-                          hex = 'B2B7BA';
-                          break;
+                        typeString = 'Rides';
+                        hex = 'FF774B';
+                        break;
+                      case 2:
+                        typeString = 'Water Rides';
+                        hex = '00DFFF';
+                        break;
+                      case 3:
+                        typeString = 'Water Play';
+                        hex = '00DFFF';
+                        break;
+                      case 4:
+                        typeString = 'Natural Wonders';
+                        hex = '56B447';
+                        break;
+                      case 5:
+                        typeString = 'Animals';
+                        hex = '56B447';
+                        break;
+                      case 6:
+                        typeString = 'Aquatic Animals';
+                        hex = '56B447';
+                        break;
+                      case 7:
+                        typeString = 'Shops';
+                        hex = 'FF70C6';
+                        break;
+                      case 8:
+                        typeString = 'Dining';
+                        hex = 'FFCE4B';
+                        break;
+                      case 9:
+                        typeString = 'Drinks';
+                        hex = 'FFCE4B';
+                        break;
+                      case 10:
+                        typeString = 'Treats';
+                        hex = 'FFCE4B';
+                        break;
+                      case 11:
+                        typeString = 'Shows';
+                        hex = 'D55EFF';
+                        break;
+                      case 12:
+                        typeString = 'Attractions';
+                        hex = '3ACCE1';
+                        break;
+                      case 13:
+                        typeString = 'Reptiles';
+                        hex = '56B447';
+                        break;
+                      case 14:
+                        typeString = 'Emergency';
+                        hex = 'FF515B';
+                        break;
+                      case 15:
+                        typeString = 'Games';
+                        hex = '67B6FF';
+                        break;
+                      case 16:
+                        typeString = 'Restrooms';
+                        hex = '40E0D0';
+                        break;
+                      case 17:
+                        typeString = 'Services';
+                        hex = '40E0D0';
+                        break;
+                      case 18:
+                        typeString = 'Entrance / Exit';
+                        hex = 'B2B7BA';
+                        break;
                       default:
                         typeString = 'Unknown';
                         hex = '2A2E43';
@@ -662,32 +702,29 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
               child: Stack(alignment: AlignmentDirectional.center, children: [
                 Container(
                   height: 440,
-                  child: FlutterMap(
-                    options: MapOptions(
-                        center:
-                            latlng.LatLng(widget.latitude, widget.longitude),
-                        // maxBounds: LatLngBounds(
-                        //   latlng.LatLng(_thisAttractionState['mapBounds']['north'] ?? 28.4754341,
-                        //       _thisAttractionState['mapBounds']['east'] ?? -81.4668636),
-                        //   latlng.LatLng(_thisAttractionState['mapBounds']['south'] ?? 28.4682176,
-                        //       _thisAttractionState['mapBounds']['west'] ?? -81.4750605),
-                        // ),
-                        zoom: 18.2,
-                        maxZoom: 18.4,
-                        rotation: _thisAttractionState['MapOrientation'] ?? 120,
-                        interactiveFlags: InteractiveFlag.none),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://api.mapbox.com/styles/v1/passmate/ckyaksv1x06iq14p0i2tsx0ux/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q',
-                        additionalOptions: {
-                          'accessToken':
-                              'pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q',
-                          'id': 'passmate.ctl4ikw5'
-                        },
-                      ),
-                    ],
-                  ),
+                  child: MapWidget(
+                      // onTapListener: _onTap,
+                      onStyleLoadedListener: _onStyleLoaded,
+                      onSourceAddedListener: (sourceAddedEventData) {
+                        RasterLayer(id: 'attractionmap', sourceId: 'raster');
+                      },
+                      styleUri:
+                          'mapbox://styles/passmate/clg1cjh0g001e01r36s2p69m8',
+                      cameraOptions: CameraOptions(
+                          bearing: _thisAttractionState['mapOrientation'] ??
+                              120.0,
+                          center: Point(
+                                  coordinates: Position(
+                                      widget.longitude, widget.latitude))
+                              .toJson(),
+                          zoom: 18.2),
+                      onMapCreated: _onMapCreated,
+                      onMapLoadErrorListener: (mapLoadingErrorEventData) {
+                        print(widget.tileId + ' error on load');
+                      },
+                      resourceOptions: ResourceOptions(
+                          accessToken:
+                              'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
                 ),
                 Container(
                   height: 440,

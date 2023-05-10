@@ -9,12 +9,10 @@ import 'dart:convert';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 // import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:flutter_map_marker_popup/extension_api.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/parser.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:passmate/base_client.dart';
@@ -29,8 +27,6 @@ import 'package:collection/collection.dart';
 import 'attraction_view.dart';
 import 'package:passmate/geolocator.dart';
 import 'package:passmate/widgets/sidenav.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const String baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
 
@@ -86,6 +82,7 @@ class FullMap extends StatefulWidget {
       ),
     );
   }
+
   @override
   State createState() => FullMapState();
 }
@@ -234,7 +231,8 @@ class FullMapState extends State<FullMap> {
   var currentTypeString;
   var listIndex;
   bool isVisible = false;
-  final GlobalKey<ScaffoldState> _attractionScaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _attractionScaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   // List pointAnnotationList = <PointAnnotation>[];
   _onTap(ScreenCoordinate coordinate) {
@@ -246,10 +244,7 @@ class FullMapState extends State<FullMap> {
     if (isWithinRange && selectedAnnotation!.iconOpacity != 0) {
       mapboxMap?.easeTo(
           CameraOptions(
-            center: Point(
-                    coordinates: Position(
-                        _filteredAttractionMap[listIndex]['longitude'],
-                        _filteredAttractionMap[listIndex]['latitude']))
+            center: Point(coordinates: Position(coordinate.y, coordinate.x))
                 .toJson(),
           ),
           MapAnimationOptions(duration: 200, startDelay: 0));
@@ -447,12 +442,10 @@ class FullMapState extends State<FullMap> {
     this.mapboxMap = mapboxMap;
     log('create annotation');
     mapboxMap.location.updateSettings(LocationComponentSettings(
-      showAccuracyRing: true,
-      puckBearingEnabled: true,
-      pulsingEnabled: true,
-      locationPuck: LocationPuck(
-          locationPuck2D: LocationPuck2D(
-          ))));
+        showAccuracyRing: true,
+        puckBearingEnabled: true,
+        pulsingEnabled: true,
+        locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
   }
 
   Point createRandomPoint() {
@@ -628,15 +621,9 @@ class FullMapState extends State<FullMap> {
     }
     return Scaffold(
       key: _attractionScaffoldKey,
-      drawer: buildAttractionDrawer(
-          context,
-          ModalRoute.of(context).toString(),
-          widget.logo,
-          widget.name,
-          widget.accent,
-          widget.image),
-      body: Stack(
-        children: [
+      drawer: buildAttractionDrawer(context, ModalRoute.of(context).toString(),
+          widget.logo, widget.name, widget.accent, widget.image),
+      body: Stack(children: [
         MapWidget(
             onTapListener: _onTap,
             onStyleLoadedListener: _onStyleLoaded,
@@ -647,7 +634,8 @@ class FullMapState extends State<FullMap> {
             cameraOptions: CameraOptions(
                 bearing: widget.orientation,
                 center: Point(
-                        coordinates: Position(widget.longitude, widget.latitude))
+                        coordinates:
+                            Position(widget.longitude, widget.latitude))
                     .toJson(),
                 zoom: 17.5),
             onMapCreated: _onMapCreated,
@@ -657,7 +645,8 @@ class FullMapState extends State<FullMap> {
             resourceOptions: ResourceOptions(
                 accessToken:
                     'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
-        if (selectedAnnotation != null && selectedAnnotation!.iconOpacity != 0.0)
+        if (selectedAnnotation != null &&
+            selectedAnnotation!.iconOpacity != 0.0)
           AnimatedPositioned(
             duration: const Duration(milliseconds: 200),
             bottom: isVisible ? 16 : -120,
@@ -675,11 +664,17 @@ class FullMapState extends State<FullMap> {
                           builder: (context) => InfoPage(
                                 type: currentTypeString,
                                 name: _filteredAttractionMap[listIndex]['name'],
-                                image: _filteredAttractionMap[listIndex]['image'],
+                                image: _filteredAttractionMap[listIndex]
+                                    ['image'],
                                 description: _filteredAttractionMap[listIndex]
                                     ['description'],
                                 attractionId: widget.attractionId,
+                                tileId: widget.tileId,
+                                minHeight: _filteredAttractionMap[listIndex]
+                                    ['heightRequirement'],
                                 orientation: widget.orientation,
+                                hex: _filteredAttractionMap[listIndex]
+                                    ['iconHex'],
                                 icon: _filteredAttractionMap[listIndex]
                                     ['coloredIcon'],
                                 itemId: _filteredAttractionMap[listIndex]['id'],
@@ -735,7 +730,8 @@ class FullMapState extends State<FullMap> {
                                   padding: const EdgeInsets.only(
                                       right: 12, left: 24, top: 16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         alignment: Alignment.topLeft,
@@ -884,9 +880,10 @@ class FullMapState extends State<FullMap> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: ()  {
+                    onTap: () {
                       log('Drawer Opened');
-                      _attractionScaffoldKey.currentState!.openDrawer();},
+                      _attractionScaffoldKey.currentState!.openDrawer();
+                    },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0, right: 12),
                       child: Image.asset('assets/Frame.png'),
@@ -909,6 +906,7 @@ class FullMapState extends State<FullMap> {
                         MaterialPageRoute(
                           builder: (context) => SearchPage(
                             orientation: widget.orientation,
+                            tileId: widget.tileId,
                             attractionId: widget.attractionId,
                           ),
                         ),
@@ -1039,9 +1037,12 @@ class FullMapState extends State<FullMap> {
                         });
                       }
                       for (var i = 0; i < _filteredAnnotationList.length; i++) {
-                        var newTypeString = '${_filteredAnnotationList[i].iconImage}';
-                        var formattedTypeString = newTypeString.replaceAll(' Selected', '');
-                        var finalFormattedTypeString = formattedTypeString.replaceAll(' Unselected', '');
+                        var newTypeString =
+                            '${_filteredAnnotationList[i].iconImage}';
+                        var formattedTypeString =
+                            newTypeString.replaceAll(' Selected', '');
+                        var finalFormattedTypeString =
+                            formattedTypeString.replaceAll(' Unselected', '');
                         int currentType;
                         switch (finalFormattedTypeString) {
                           case 'Rides':
@@ -1159,7 +1160,151 @@ class FullMapState extends State<FullMap> {
                   );
                 })),
           ),
-        )
+        ),
+        AnimatedPositioned(
+          duration:
+              const Duration(milliseconds: 120), // Duration of the animation
+          bottom: selectedAnnotation == null
+              ? 24
+              : 164, // Animate between 164 and 24 based on the value of isVisible
+          left: 4,
+          child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.resolveWith<Color>((states) {
+                  if (_selectedFilters.contains(16)) {
+                    return Color(
+                        0xFF40E0D0); // set to desired color if 16 is selected
+                  } else {
+                    return Color.fromARGB(170, 255, 255,
+                        255); // set to default color if 16 is not selected
+                  }
+                }),
+                shape: MaterialStateProperty.all(
+                  CircleBorder(
+                    side: BorderSide(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                if (_selectedFilters.contains(16)) {
+                  List updatedList = _selectedFilters;
+                  log(updatedList.toString());
+                  updatedList.remove(16);
+                  log(updatedList.toString());
+                  setState(() {
+                    _selectedFilters = updatedList;
+                    _selectedFilters.sort();
+                  });
+                  log(_selectedFilters.toString());
+                } else {
+                  List updatedList = _selectedFilters;
+                  updatedList.add(16);
+                  mapboxMap!.easeTo(
+                      CameraOptions(
+                        zoom: 16.5,
+                        // center: Point(
+                        //         coordinates:
+                        //             Position(widget.longitude, widget.latitude))
+                        //     .toJson(),
+                      ),
+                      MapAnimationOptions(duration: 200, startDelay: 0));
+                  setState(() {
+                    _selectedFilters = updatedList;
+                    _selectedFilters.sort();
+                  });
+                }
+                for (var i = 0; i < _filteredAnnotationList.length; i++) {
+                  var newTypeString = '${_filteredAnnotationList[i].iconImage}';
+                  var formattedTypeString =
+                      newTypeString.replaceAll(' Selected', '');
+                  var finalFormattedTypeString =
+                      formattedTypeString.replaceAll(' Unselected', '');
+                  int currentType;
+                  switch (finalFormattedTypeString) {
+                    case 'Rides':
+                      currentType = 1;
+                      break;
+                    case 'Water Rides':
+                      currentType = 2;
+                      break;
+                    case 'Water Play':
+                      currentType = 3;
+                      break;
+                    case 'Natural Wonders':
+                      currentType = 4;
+                      break;
+                    case 'Animals':
+                      currentType = 5;
+                      break;
+                    case 'Aquatic Animals':
+                      currentType = 6;
+                      break;
+                    case 'Shops':
+                      currentType = 7;
+                      break;
+                    case 'Dining':
+                      currentType = 8;
+                      break;
+                    case 'Drinks':
+                      currentType = 9;
+                      break;
+                    case 'Treats':
+                      currentType = 10;
+                      break;
+                    case 'Shows':
+                      currentType = 11;
+                      break;
+                    case 'Attractions':
+                      currentType = 12;
+                      break;
+                    case 'Reptiles':
+                      currentType = 13;
+                      break;
+                    case 'Emergency':
+                      currentType = 14;
+                      break;
+                    case 'Games':
+                      currentType = 15;
+                      break;
+                    case 'Restrooms':
+                      currentType = 16;
+                      break;
+                    case 'Services':
+                      currentType = 17;
+                      break;
+                    case 'Entrance':
+                      currentType = 18;
+                      break;
+                    default:
+                      currentType = 0;
+                  }
+                  log(currentType.toString());
+                  log(finalFormattedTypeString.toString());
+                  log(_filteredAnnotationList[i].iconImage.toString());
+                  if (_selectedFilters.contains(currentType)) {
+                    _filteredAnnotationList[i].iconOpacity = 1.0;
+                    _pointAnnotationManager!.update(_filteredAnnotationList[i]);
+                  } else {
+                    _filteredAnnotationList[i].iconOpacity = 0.0;
+                    _pointAnnotationManager!.update(_filteredAnnotationList[i]);
+                  }
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.wc,
+                  size: 32,
+                  color: _selectedFilters.contains(16)
+                      ? Colors.white
+                      : Color.fromARGB(120, 0, 0, 0),
+                ),
+              )),
+        ),
       ]),
     );
   }

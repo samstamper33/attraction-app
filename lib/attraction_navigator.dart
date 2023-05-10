@@ -7,7 +7,7 @@ import 'package:passmate/attraction_view.dart';
 import 'package:passmate/attraction_loading.dart';
 import 'package:passmate/widgets/sidenav.dart';
 import 'package:passmate/attraction_mapbox.dart';
-import 'package:passmate/flutter_map.dart';
+// import 'package:passmate/flutter_map.dart';
 
 class AttractionNavigatorPage extends StatefulWidget {
   String attractionId;
@@ -79,6 +79,7 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
           attractionId: widget.attractionId,
           logo: widget.logo,
           accent: widget.accent,
+          tileId: widget.tileId,
           longitude: widget.longitude,
           latitude: widget.latitude,
           onItemTapped: _onItemTapped),

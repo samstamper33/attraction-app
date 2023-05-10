@@ -10,7 +10,8 @@ const String baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
 class SearchPage extends StatefulWidget {
   late double orientation;
   String attractionId;
-  SearchPage({required this.attractionId, required this.orientation});
+  String tileId;
+  SearchPage({required this.attractionId, required this.orientation, required this.tileId});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -148,6 +149,7 @@ class _SearchPageState extends State<SearchPage> {
               final hex = _filteredState[index]['iconHex'];
               final type = _filteredState[index]['type'];
               final id = _filteredState[index]['id'];
+              final minHeight = _filteredState[index]['heightRequirement'];
               final orientation = widget.orientation;
               final locationName = _filteredState[index]['name'];
               final icon = _filteredState[index]['iconUnselected'];
@@ -218,6 +220,9 @@ class _SearchPageState extends State<SearchPage> {
                         builder: (context) => InfoPage(
                               name: locationName,
                               type: typeString,
+                              tileId: widget.tileId,
+                              hex: hex,
+                              minHeight: minHeight,
                               description: description,
                               image: poiimage,
                               orientation: orientation,

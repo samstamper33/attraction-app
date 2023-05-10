@@ -1,0 +1,246 @@
+
+App Thinning Size Report for All Variants of Runner
+
+Variant: passmate-0497AD86-FC6A-4B14-AB77-25C98FA58315.ipa
+Supported variant descriptors: [device: iPod9,1, os-version: 15.0], [device: iPhone8,4, os-version: 15.0], and [device: iPhone8,1, os-version: 15.0]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-085CA34A-5E62-4FB7-9036-F98804B930C3.ipa
+Supported variant descriptors: [device: iPhone8,2, os-version: 15.0]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-0E1A6696-6095-4FE2-8343-C9DE766F83B6.ipa
+Supported variant descriptors: [device: iPhone8,2, os-version: 12.0] and [device: iPhone7,1, os-version: 12.0]
+App + On Demand Resources size: 20 MB compressed, 56.8 MB uncompressed
+App size: 20 MB compressed, 56.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-19080F16-F108-4FD6-8499-941519F812FA.ipa
+Supported variant descriptors: [device: iPhone11,8, os-version: 13.0], [device: iPhone12,1, os-version: 13.0], [device: iPhone12,1, os-version: 14.0], and [device: iPhone11,8, os-version: 14.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.8 MB uncompressed
+App size: 16.7 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-1A400F56-8DCC-4284-9211-2616DC430556.ipa
+Supported variant descriptors: [device: iPhone9,1, os-version: 11.0], [device: iPhone10,4, os-version: 11.0], [device: iPhone9,3, os-version: 11.0], and [device: iPhone10,1, os-version: 11.0]
+App + On Demand Resources size: 19.2 MB compressed, 55.9 MB uncompressed
+App size: 19.2 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-31507917-FD82-45C6-89A3-24A54B1F45F1.ipa
+Supported variant descriptors: [device: iPhone6,1, os-version: 11.0], [device: iPhone7,2, os-version: 11.0], [device: iPhone8,1, os-version: 11.0], [device: iPod7,1, os-version: 11.0], [device: iPhone8,4, os-version: 11.0], and [device: iPhone6,2, os-version: 11.0]
+App + On Demand Resources size: 19.2 MB compressed, 55.9 MB uncompressed
+App size: 19.2 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-32E472AB-30E2-46FA-B630-63B2A5F39032.ipa
+Supported variant descriptors: [device: iPhone9,2, os-version: 14.0], [device: iPhone10,5, os-version: 14.0], [device: iPhone10,6, os-version: 13.0], [device: iPhone10,2, os-version: 14.0], [device: iPhone10,3, os-version: 13.0], [device: iPhone10,5, os-version: 13.0], [device: iPhone11,2, os-version: 14.0], [device: iPhone13,4, os-version: 14.0], [device: iPhone11,4, os-version: 14.0], [device: iPhone11,2, os-version: 13.0], [device: iPhone13,2, os-version: 14.0], [device: iPhone11,6, os-version: 14.0], [device: iPhone13,3, os-version: 14.0], [device: iPhone11,4, os-version: 13.0], [device: iPhone12,5, os-version: 14.0], [device: iPhone9,4, os-version: 14.0], [device: iPhone12,3, os-version: 14.0], [device: iPhone9,4, os-version: 13.0], [device: iPhone13,1, os-version: 14.0], [device: iPhone11,6, os-version: 13.0], [device: iPhone10,2, os-version: 13.0], [device: iPhone10,3, os-version: 14.0], [device: iPhone10,6, os-version: 14.0], [device: iPhone12,3, os-version: 13.0], [device: iPhone9,2, os-version: 13.0], and [device: iPhone12,5, os-version: 13.0]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-33722C56-C7A9-4B5F-88D3-5EC4F465B3D0.ipa
+Supported variant descriptors: [device: iPhone8,1, os-version: 14.0], [device: iPhone8,4, os-version: 13.0], [device: iPhone8,1, os-version: 13.0], [device: iPod9,1, os-version: 14.0], [device: iPhone8,4, os-version: 14.0], and [device: iPod9,1, os-version: 13.0]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-356F8534-3B4F-4225-9F2D-554F258BB38C.ipa
+Supported variant descriptors: [device: iPhone9,2, os-version: 12.0], [device: iPhone11,2, os-version: 12.0], [device: iPhone11,6, os-version: 12.0], [device: iPhone10,5, os-version: 12.0], [device: iPhone9,4, os-version: 12.0], [device: iPhone11,4, os-version: 12.0], [device: iPhone10,3, os-version: 12.0], [device: iPhone10,6, os-version: 12.0], and [device: iPhone10,2, os-version: 12.0]
+App + On Demand Resources size: 20 MB compressed, 56.8 MB uncompressed
+App size: 20 MB compressed, 56.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-39C7141E-88A2-4DD0-A364-2F800948C193.ipa
+Supported variant descriptors: [device: iPhone9,4, os-version: 11.0], [device: iPhone10,2, os-version: 11.0], [device: iPhone10,5, os-version: 11.0], [device: iPhone10,3, os-version: 11.0], [device: iPhone10,6, os-version: 11.0], and [device: iPhone9,2, os-version: 11.0]
+App + On Demand Resources size: 20 MB compressed, 56.8 MB uncompressed
+App size: 20 MB compressed, 56.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-3F36D415-3900-4D53-A820-74ABDF8933F7.ipa
+Supported variant descriptors: [device: iPhone8,2, os-version: 14.0] and [device: iPhone8,2, os-version: 13.0]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-41AC4BC7-EFD3-4026-B82A-C4990669AF08.ipa
+Supported variant descriptors: [device: iPad4,5, os-version: 12.2], [device: iPad5,2, os-version: 12.2], [device: iPad5,4, os-version: 12.2], [device: iPad4,2, os-version: 12.2], [device: iPad7,6, os-version: 12.2], [device: iPad4,9, os-version: 12.2], [device: iPad6,7, os-version: 12.2], [device: iPad4,4, os-version: 12.2], [device: iPad5,3, os-version: 12.2], [device: iPad6,8, os-version: 12.2], [device: iPad5,1, os-version: 12.2], [device: iPad4,1, os-version: 12.2], [device: iPad4,8, os-version: 12.2], [device: iPad6,12, os-version: 12.2], [device: iPad4,3, os-version: 12.2], [device: iPad7,5, os-version: 12.2], [device: iPad4,6, os-version: 12.2], [device: iPad6,11, os-version: 12.2], and [device: iPad4,7, os-version: 12.2]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-4DA18D79-3C60-440B-B98D-EAA54A06165A.ipa
+Supported variant descriptors: [device: iPad8,2, os-version: 12.2], [device: iPad6,4, os-version: 12.2], [device: iPad11,2, os-version: 12.2], [device: iPad11,4, os-version: 12.2], [device: iPad8,1, os-version: 12.2], [device: iPad8,8, os-version: 12.2], [device: iPad8,3, os-version: 12.2], [device: iPad11,3, os-version: 12.2], [device: iPad8,4, os-version: 12.2], [device: iPad7,1, os-version: 12.2], [device: iPad7,2, os-version: 12.2], [device: iPad8,7, os-version: 12.2], [device: iPad6,3, os-version: 12.2], [device: iPad7,4, os-version: 12.2], [device: iPad7,3, os-version: 12.2], [device: iPad8,6, os-version: 12.2], [device: iPad11,1, os-version: 12.2], and [device: iPad8,5, os-version: 12.2]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-593C7C0F-56A7-497B-A6F3-4DB7879C23A8.ipa
+Supported variant descriptors: [device: iPhone10,3, os-version: 12.2], [device: iPhone11,4, os-version: 12.2], [device: iPhone10,5, os-version: 12.2], [device: iPhone11,6, os-version: 12.2], [device: iPhone9,4, os-version: 12.2], [device: iPhone10,6, os-version: 12.2], [device: iPhone9,2, os-version: 12.2], [device: iPhone10,2, os-version: 12.2], and [device: iPhone11,2, os-version: 12.2]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-59704FDB-A0AA-4A4B-B562-91983E4367BD.ipa
+Supported variant descriptors: [device: iPhone8,2, os-version: 11.0] and [device: iPhone7,1, os-version: 11.0]
+App + On Demand Resources size: 20 MB compressed, 56.8 MB uncompressed
+App size: 20 MB compressed, 56.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-5C6581B6-98EC-4C7D-BBB2-B72AA3DC35CB.ipa
+Supported variant descriptors: [device: iPhone14,3, os-version: 16.0], [device: iPhone11,2, os-version: 15.0], [device: iPhone9,4, os-version: 15.0], [device: iPhone12,3, os-version: 15.0], [device: iPhone10,5, os-version: 15.0], [device: iPhone14,3, os-version: 15.0], [device: iPhone14,5, os-version: 15.0], [device: iPhone12,5, os-version: 15.0], [device: iPhone14,4, os-version: 15.0], [device: iPhone13,4, os-version: 15.0], [device: iPhone14,5, os-version: 16.0], [device: iPhone10,2, os-version: 16.0], [device: iPhone14,2, os-version: 16.0], [device: iPhone10,5, os-version: 16.0], [device: iPhone13,2, os-version: 15.0], [device: iPhone13,1, os-version: 16.0], [device: iPhone13,2, os-version: 16.0], [device: iPhone11,6, os-version: 16.0], [device: iPhone15,2, os-version: 16.0], [device: iPhone10,2, os-version: 15.0], [device: iPhone10,3, os-version: 15.0], [device: iPhone12,3, os-version: 16.0], [device: iPhone10,6, os-version: 16.0], [device: iPhone13,4, os-version: 16.0], [device: iPhone14,7, os-version: 16.0], [device: iPhone12,5, os-version: 16.0], [device: iPhone14,2, os-version: 15.0], [device: iPhone11,4, os-version: 15.0], [device: iPhone13,3, os-version: 15.0], [device: iPhone13,1, os-version: 15.0], [device: iPhone11,6, os-version: 15.0], [device: iPhone14,4, os-version: 16.0], [device: iPhone13,3, os-version: 16.0], [device: iPhone14,8, os-version: 16.0], [device: iPhone15,3, os-version: 16.0], [device: iPhone10,6, os-version: 15.0], [device: iPhone9,2, os-version: 15.0], [device: iPhone10,3, os-version: 16.0], [device: iPhone11,4, os-version: 16.0], and [device: iPhone11,2, os-version: 16.0]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-6B7B9923-5380-404F-96FA-D170BBF91E79.ipa
+Supported variant descriptors: [device: iPhone7,2, os-version: 12.2], [device: iPod7,1, os-version: 12.2], [device: iPhone8,4, os-version: 12.2], [device: iPod9,1, os-version: 12.2], [device: iPhone8,1, os-version: 12.2], [device: iPhone6,1, os-version: 12.2], and [device: iPhone6,2, os-version: 12.2]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-75D47F88-4241-475F-8F57-F080F1FD19A4.ipa
+Supported variant descriptors: [device: iPhone11,8, os-version: 12.2]
+App + On Demand Resources size: 16.7 MB compressed, 47.8 MB uncompressed
+App size: 16.7 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-8691255A-C79B-49F8-B331-AF4887BBEFF5.ipa
+Supported variant descriptors: [device: iPad5,4, os-version: 12.0], [device: iPad4,8, os-version: 12.0], [device: iPad4,9, os-version: 12.0], [device: iPad6,8, os-version: 12.0], [device: iPad4,1, os-version: 12.0], [device: iPad7,5, os-version: 12.0], [device: iPad4,3, os-version: 12.0], [device: iPad6,11, os-version: 12.0], [device: iPad5,1, os-version: 12.0], [device: iPad7,6, os-version: 12.0], [device: iPad4,7, os-version: 12.0], [device: iPad5,3, os-version: 12.0], [device: iPad4,4, os-version: 12.0], [device: iPad4,6, os-version: 12.0], [device: iPad4,2, os-version: 12.0], [device: iPad6,7, os-version: 12.0], [device: iPad6,12, os-version: 12.0], [device: iPad4,5, os-version: 12.0], and [device: iPad5,2, os-version: 12.0]
+App + On Demand Resources size: 19.3 MB compressed, 55.9 MB uncompressed
+App size: 19.3 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-8747B1D2-6EA3-4FAC-967F-F9A22565FCA6.ipa
+Supported variant descriptors: [device: iPhone6,2, os-version: 12.0], [device: iPhone8,1, os-version: 12.0], [device: iPod7,1, os-version: 12.0], [device: iPhone6,1, os-version: 12.0], [device: iPhone8,4, os-version: 12.0], and [device: iPhone7,2, os-version: 12.0]
+App + On Demand Resources size: 19.2 MB compressed, 55.9 MB uncompressed
+App size: 19.2 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-AAEEC381-7F73-49C1-8D32-0EF712655B94.ipa
+Supported variant descriptors: [device: iPhone7,1, os-version: 12.2] and [device: iPhone8,2, os-version: 12.2]
+App + On Demand Resources size: 17.5 MB compressed, 48.7 MB uncompressed
+App size: 17.5 MB compressed, 48.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-B0293567-CCAF-4116-9E2A-AE4D75444C46.ipa
+Supported variant descriptors: [device: iPhone11,8, os-version: 12.0]
+App + On Demand Resources size: 19.3 MB compressed, 55.9 MB uncompressed
+App size: 19.3 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-B28A4282-2A42-454E-AE68-11D0AF5D81B8.ipa
+Supported variant descriptors: [device: iPad7,11, os-version: 16.0], [device: iPad7,12, os-version: 16.0], [device: iPad11,7, os-version: 15.0], [device: iPad6,8, os-version: 15.0], [device: iPad7,6, os-version: 15.0], [device: iPad5,4, os-version: 15.0], [device: iPad12,1, os-version: 16.0], [device: iPad11,6, os-version: 16.0], [device: iPad13,18, os-version: 16.0], [device: iPad7,6, os-version: 16.0], [device: iPad7,12, os-version: 15.0], [device: iPad7,5, os-version: 16.0], [device: iPad11,7, os-version: 16.0], [device: iPad6,11, os-version: 15.0], [device: iPad12,2, os-version: 15.0], [device: iPad12,2, os-version: 16.0], [device: iPad7,11, os-version: 15.0], [device: iPad5,1, os-version: 15.0], [device: iPad6,12, os-version: 16.0], [device: iPad12,1, os-version: 15.0], [device: iPad6,11, os-version: 16.0], [device: iPad6,12, os-version: 15.0], [device: iPad6,7, os-version: 15.0], [device: iPad5,3, os-version: 15.0], [device: iPad13,19, os-version: 16.0], [device: iPad6,7, os-version: 16.0], [device: iPad7,5, os-version: 15.0], [device: iPad6,8, os-version: 16.0], [device: iPad5,2, os-version: 15.0], and [device: iPad11,6, os-version: 15.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-B81B0A58-B650-4FD2-9B74-69BACA6DC3CD.ipa
+Supported variant descriptors: [device: iPhone10,1, os-version: 12.2], [device: iPhone10,4, os-version: 12.2], [device: iPhone9,1, os-version: 12.2], and [device: iPhone9,3, os-version: 12.2]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-BBFCE97D-532C-4635-956E-C32F51CAE4B3.ipa
+Supported variant descriptors: [device: iPad7,5, os-version: 14.0], [device: iPad7,6, os-version: 14.0], [device: iPad7,12, os-version: 13.0], [device: iPad11,7, os-version: 14.0], [device: iPad6,11, os-version: 14.0], [device: iPad5,1, os-version: 13.0], [device: iPad6,11, os-version: 13.0], [device: iPad5,4, os-version: 13.0], [device: iPad6,12, os-version: 13.0], [device: iPad6,8, os-version: 14.0], [device: iPad5,1, os-version: 14.0], [device: iPad6,12, os-version: 14.0], [device: iPad5,2, os-version: 14.0], [device: iPad7,6, os-version: 13.0], [device: iPad7,11, os-version: 13.0], [device: iPad7,5, os-version: 13.0], [device: iPad6,8, os-version: 13.0], [device: iPad5,3, os-version: 13.0], [device: iPad11,6, os-version: 14.0], [device: iPad7,12, os-version: 14.0], [device: iPad5,2, os-version: 13.0], [device: iPad5,3, os-version: 14.0], [device: iPad6,7, os-version: 13.0], [device: iPad6,7, os-version: 14.0], [device: iPad7,11, os-version: 14.0], and [device: iPad5,4, os-version: 14.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-BCAD150D-81A9-4523-8B06-968859BA0A04.ipa
+Supported variant descriptors: [device: iPhone10,1, os-version: 15.0], [device: iPhone9,1, os-version: 15.0], [device: iPhone12,8, os-version: 16.0], [device: iPhone14,6, os-version: 15.0], [device: iPhone10,4, os-version: 15.0], [device: iPhone12,8, os-version: 15.0], [device: iPhone9,3, os-version: 15.0], [device: iPhone10,1, os-version: 16.0], [device: iPhone14,6, os-version: 16.0], and [device: iPhone10,4, os-version: 16.0]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-BD728A70-FFED-4493-9CA3-90F177E42CDA.ipa
+Supported variant descriptors: [device: iPad7,1, os-version: 11.0], [device: iPad6,3, os-version: 11.0], [device: iPad7,3, os-version: 11.0], [device: iPad6,4, os-version: 11.0], [device: iPad7,2, os-version: 11.0], and [device: iPad7,4, os-version: 11.0]
+App + On Demand Resources size: 19.3 MB compressed, 55.9 MB uncompressed
+App size: 19.3 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-C15EE987-357C-4BFD-AB5D-3677639B7B48.ipa
+Supported variant descriptors: [device: iPad4,5, os-version: 11.0], [device: iPad4,6, os-version: 11.0], [device: iPad5,1, os-version: 11.0], [device: iPad6,12, os-version: 11.0], [device: iPad5,3, os-version: 11.0], [device: iPad4,1, os-version: 11.0], [device: iPad4,9, os-version: 11.0], [device: iPad6,7, os-version: 11.0], [device: iPad5,4, os-version: 11.0], [device: iPad4,3, os-version: 11.0], [device: iPad6,11, os-version: 11.0], [device: iPad7,5, os-version: 11.0], [device: iPad4,7, os-version: 11.0], [device: iPad4,4, os-version: 11.0], [device: iPad4,8, os-version: 11.0], [device: iPad7,6, os-version: 11.0], [device: iPad5,2, os-version: 11.0], [device: iPad4,2, os-version: 11.0], and [device: iPad6,8, os-version: 11.0]
+App + On Demand Resources size: 19.3 MB compressed, 55.9 MB uncompressed
+App size: 19.3 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-D206C40D-994A-462F-B63A-4DBB38FCD475.ipa
+Supported variant descriptors: [device: iPhone10,1, os-version: 12.0], [device: iPhone9,1, os-version: 12.0], [device: iPhone9,3, os-version: 12.0], and [device: iPhone10,4, os-version: 12.0]
+App + On Demand Resources size: 19.2 MB compressed, 55.9 MB uncompressed
+App size: 19.2 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-EF59EA6A-6416-4602-B71F-0C30F07193D2.ipa
+Supported variant descriptors: [device: iPad8,7, os-version: 12.0], [device: iPad7,4, os-version: 12.0], [device: iPad7,3, os-version: 12.0], [device: iPad8,2, os-version: 12.0], [device: iPad7,1, os-version: 12.0], [device: iPad8,6, os-version: 12.0], [device: iPad6,3, os-version: 12.0], [device: iPad8,5, os-version: 12.0], [device: iPad8,8, os-version: 12.0], [device: iPad6,4, os-version: 12.0], [device: iPad8,3, os-version: 12.0], [device: iPad8,1, os-version: 12.0], [device: iPad8,4, os-version: 12.0], and [device: iPad7,2, os-version: 12.0]
+App + On Demand Resources size: 19.3 MB compressed, 55.9 MB uncompressed
+App size: 19.3 MB compressed, 55.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-F1619D3B-8829-4D0A-B1CF-5497662AE701.ipa
+Supported variant descriptors: [device: iPhone10,4, os-version: 13.0], [device: iPhone9,3, os-version: 13.0], [device: iPhone9,1, os-version: 13.0], [device: iPhone12,8, os-version: 13.0], [device: iPhone9,1, os-version: 14.0], [device: iPhone10,1, os-version: 13.0], [device: iPhone10,1, os-version: 14.0], [device: iPhone12,8, os-version: 14.0], [device: iPhone9,3, os-version: 14.0], and [device: iPhone10,4, os-version: 14.0]
+App + On Demand Resources size: 16.6 MB compressed, 47.8 MB uncompressed
+App size: 16.6 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-F2EF9FEB-2BAF-4D83-81A6-7EEB95162A5D.ipa
+Supported variant descriptors: [device: iPad11,3, os-version: 14.0], [device: iPad7,2, os-version: 14.0], [device: iPad11,2, os-version: 13.0], [device: iPad13,5, os-version: 14.0], [device: iPad8,2, os-version: 13.0], [device: iPad8,12, os-version: 14.0], [device: iPad11,4, os-version: 14.0], [device: iPad13,9, os-version: 14.0], [device: iPad8,9, os-version: 13.0], [device: iPad7,3, os-version: 13.0], [device: iPad7,3, os-version: 14.0], [device: iPad8,4, os-version: 13.0], [device: iPad11,1, os-version: 13.0], [device: iPad13,2, os-version: 14.0], [device: iPad7,4, os-version: 14.0], [device: iPad13,6, os-version: 14.0], [device: iPad7,4, os-version: 13.0], [device: iPad13,7, os-version: 14.0], [device: iPad8,1, os-version: 13.0], [device: iPad7,1, os-version: 13.0], [device: iPad8,7, os-version: 13.0], [device: iPad7,1, os-version: 14.0], [device: iPad6,3, os-version: 14.0], [device: iPad8,3, os-version: 14.0], [device: iPad11,2, os-version: 14.0], [device: iPad13,11, os-version: 14.0], [device: iPad8,8, os-version: 14.0], [device: iPad7,2, os-version: 13.0], [device: iPad6,4, os-version: 14.0], [device: iPad8,8, os-version: 13.0], [device: iPad13,1, os-version: 14.0], [device: iPad8,9, os-version: 14.0], [device: iPad13,8, os-version: 14.0], [device: iPad8,4, os-version: 14.0], [device: iPad13,4, os-version: 14.0], [device: iPad11,3, os-version: 13.0], [device: iPad6,4, os-version: 13.0], [device: iPad8,3, os-version: 13.0], [device: iPad8,11, os-version: 13.0], [device: iPad11,1, os-version: 14.0], [device: iPad8,5, os-version: 14.0], [device: iPad13,10, os-version: 14.0], [device: MacFamily20,1, os-version: 14.0], [device: iPad11,4, os-version: 13.0], [device: iPad6,3, os-version: 13.0], [device: iPad8,1, os-version: 14.0], [device: iPad8,7, os-version: 14.0], [device: iPad8,5, os-version: 13.0], [device: iPad8,10, os-version: 14.0], [device: iPad8,11, os-version: 14.0], [device: iPad8,10, os-version: 13.0], [device: iPad8,6, os-version: 13.0], [device: iPad8,12, os-version: 13.0], [device: iPad8,6, os-version: 14.0], and [device: iPad8,2, os-version: 14.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-FB2793B3-CA5A-4F1C-95C9-F731EBDDA8C4.ipa
+Supported variant descriptors: [device: iPhone11,8, os-version: 16.0], [device: iPhone12,1, os-version: 15.0], [device: iPhone12,1, os-version: 16.0], and [device: iPhone11,8, os-version: 15.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.8 MB uncompressed
+App size: 16.7 MB compressed, 47.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate-FDF530B5-01C4-42A6-9223-E6950B1C84DE.ipa
+Supported variant descriptors: [device: iPad6,3, os-version: 15.0], [device: iPad14,4-A, os-version: 16.0], [device: iPad13,11, os-version: 15.0], [device: MacFamily20,1, os-version: 16.0], [device: iPad8,2, os-version: 16.0], [device: iPad13,2, os-version: 15.0], [device: iPad6,4, os-version: 15.0], [device: iPad8,8, os-version: 15.0], [device: iPad13,2, os-version: 16.0], [device: iPad7,2, os-version: 16.0], [device: iPad13,17, os-version: 15.0], [device: iPad13,5, os-version: 15.0], [device: iPad13,10, os-version: 15.0], [device: iPad14,2, os-version: 16.0], [device: iPad7,3, os-version: 16.0], [device: iPad13,7, os-version: 15.0], [device: iPad8,9, os-version: 15.0], [device: iPad8,4, os-version: 16.0], [device: iPad8,7, os-version: 15.0], [device: iPad13,6, os-version: 16.0], [device: iPad8,7, os-version: 16.0], [device: iPad8,5, os-version: 16.0], [device: iPad8,6, os-version: 16.0], [device: iPad8,12, os-version: 15.0], [device: iPad8,10, os-version: 15.0], [device: iPad14,3-B, os-version: 16.0], [device: iPad13,4, os-version: 16.0], [device: iPad13,17, os-version: 16.0], [device: iPad14,3-A, os-version: 16.0], [device: iPad13,9, os-version: 16.0], [device: iPad14,4-B, os-version: 16.0], [device: iPad14,2, os-version: 15.0], [device: iPad13,8, os-version: 15.0], [device: iPad8,9, os-version: 16.0], [device: iPad11,4, os-version: 16.0], [device: iPad8,11, os-version: 16.0], [device: iPad11,2, os-version: 15.0], [device: iPad14,1, os-version: 16.0], [device: iPad13,8, os-version: 16.0], [device: iPad13,9, os-version: 15.0], [device: iPad14,6-A, os-version: 16.0], [device: iPad11,2, os-version: 16.0], [device: iPad7,1, os-version: 16.0], [device: iPad7,3, os-version: 15.0], [device: iPad7,1, os-version: 15.0], [device: iPad7,4, os-version: 16.0], [device: iPad13,5, os-version: 16.0], [device: iPad8,3, os-version: 16.0], [device: iPad14,5-A, os-version: 16.0], [device: iPad6,4, os-version: 16.0], [device: iPad6,3, os-version: 16.0], [device: iPad8,1, os-version: 15.0], [device: iPad13,10, os-version: 16.0], [device: iPad8,4, os-version: 15.0], [device: iPad8,6, os-version: 15.0], [device: iPad8,10, os-version: 16.0], [device: iPad8,2, os-version: 15.0], [device: iPad11,4, os-version: 15.0], [device: MacFamily20,1, os-version: 15.0], [device: iPad14,5-B, os-version: 16.0], [device: iPad8,12, os-version: 16.0], [device: iPad13,1, os-version: 16.0], [device: iPad8,11, os-version: 15.0], [device: iPad11,1, os-version: 16.0], [device: iPad8,3, os-version: 15.0], [device: iPad8,1, os-version: 16.0], [device: iPad13,6, os-version: 15.0], [device: iPad8,8, os-version: 16.0], [device: iPad7,4, os-version: 15.0], [device: iPad13,1, os-version: 15.0], [device: iPad13,16, os-version: 16.0], [device: iPad11,1, os-version: 15.0], [device: iPad14,6-B, os-version: 16.0], [device: iPad13,4, os-version: 15.0], [device: iPad11,3, os-version: 15.0], [device: iPad11,3, os-version: 16.0], [device: iPad8,5, os-version: 15.0], [device: iPad13,7, os-version: 16.0], [device: iPad13,11, os-version: 16.0], [device: iPad13,16, os-version: 15.0], [device: iPad7,2, os-version: 15.0], and [device: iPad14,1, os-version: 15.0]
+App + On Demand Resources size: 16.7 MB compressed, 47.9 MB uncompressed
+App size: 16.7 MB compressed, 47.9 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: passmate.ipa
+Supported variant descriptors: Universal
+App + On Demand Resources size: 21.3 MB compressed, 58.2 MB uncompressed
+App size: 21.3 MB compressed, 58.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed

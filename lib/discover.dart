@@ -57,7 +57,8 @@ class _DiscoverAppState extends State<DiscoverApp> {
     var response = await client.get(Uri.parse(
         'https://passmate-update.azurewebsites.net/api/HttpTrigger1?code=D0bcpKV9BsHTA4_0IscG_dj6zPcOA42ucSzEL8DEttvsAzFu3z1Qcg=='));
     log(response.body);
-    if (response.body != packageInfo.version) {
+    // if (response.body != packageInfo.version) {
+    if (response.body.indexOf(packageInfo.version) >= 0) {
       setState(() {
         _showUpdateModal = true;
       });
@@ -65,10 +66,18 @@ class _DiscoverAppState extends State<DiscoverApp> {
     }
   }
 
+  double distanceBetween(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) {
+    return Geolocator.distanceBetween(
+        startLatitude, startLongitude, endLatitude, endLongitude);
+  }
+
   var client = http.Client();
   getAttractionsList() {
     _getPackageInfo();
     Future<dynamic> get() async {
+      // Get the user's location
+      Position position = await Geolocator.getCurrentPosition();
       var url = Uri.parse(baseUrl);
       String basicAuth =
           'Basic ' + base64.encode(utf8.encode('passmateapp:passmateapppass'));
