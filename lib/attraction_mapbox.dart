@@ -438,9 +438,9 @@ class FullMapState extends State<FullMap> {
     mapboxMap.setBounds(widget.cameraOptions());
     mapboxMap.scaleBar.updateSettings(scaleSettings);
     mapboxMap.attribution.updateSettings(attributionSettings);
-    print('onMapCreated called');
+    // print('onMapCreated called');
     this.mapboxMap = mapboxMap;
-    log('create annotation');
+    // log('create annotation');
     mapboxMap.location.updateSettings(LocationComponentSettings(
         showAccuracyRing: true,
         puckBearingEnabled: true,
