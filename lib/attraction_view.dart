@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:passmate/widgets/sidenav.dart';
+import 'package:passmate/geofencing.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -82,6 +83,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
       _thisAttractionState = decodedAttraction;
     });
   }
+
   var settings = CompassSettings(enabled: false);
   var scaleSettings = ScaleBarSettings(enabled: false);
   var attributionSettings = AttributionSettings(
@@ -92,7 +94,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     iconColor: 0xFF000000,
   );
 
-    _onStyleLoaded(StyleLoadedEventData data) async {
+  _onStyleLoaded(StyleLoadedEventData data) async {
     print('onStyleLoaded called');
     await mapboxMap?.style.addSource(RasterSource(
       id: "source",
@@ -179,11 +181,35 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     return get();
   }
 
+  _getLocationNotifications() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/LocationNotifications/${widget.attractionId}'),
+      headers: {
+        HttpHeaders.authorizationHeader: basicAuth,
+        HttpHeaders.acceptHeader: 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      final locationNotifications =
+          List<Map<String, dynamic>>.from(decodedResponse);
+      return locationNotifications;
+    } else {
+      print(response.statusCode);
+      return null;
+    }
+  }
+
   List _availableFilterList = [];
   List _selectedFilters = [];
   List _filteredAttractionMap = [];
   List _thisAttractionMapState = [];
   List filterResults = [];
+  List locationNotifications = [];
+
+  GeoFencing geofencing = GeoFencing();
+
   _asyncAttractionMapMethod() async {
     var thisAttractionMap = await getPOI();
     var decodedAttractionMap = jsonDecode(thisAttractionMap);
@@ -195,6 +221,12 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     filterResults = decodedAttractionMap
         .where((item) => _selectedFilters.contains(item['type']))
         .toList();
+
+    var locationNotifications = await _getLocationNotifications();
+    if (locationNotifications != null) {
+      geofencing.registerLocationNotifications(locationNotifications);
+    }
+
     setState(() {
       _thisAttractionMapState = decodedAttractionMap;
       _availableFilterList = filterTypes;
@@ -212,6 +244,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
   }
 
   late String baseUrl;
+  late String basicAuth;
   int navigationIndex = (0);
   // void _onItemTapped(int index) {
   //   setState(() {
@@ -227,6 +260,11 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     super.initState();
     // mapController = MapController();
     baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
+    basicAuth =
+        'Basic ${base64.encode(utf8.encode('passmateapp:passmateapppass'))}';
+
+    geofencing.init();
+
     _asyncAttractionMethod();
     // navigationIndex = (0);
     _asyncAttractionOfferMethod();
@@ -258,6 +296,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
               appBarBGColor: Color(
                   int.parse('0xFF${_thisAttractionState['accentColorHex']}')),
               centerTitle: true,
+              excludeHeaderSemantics: true,
               titleWidget: Text(
                 _thisAttractionState['name'],
                 style: GoogleFonts.poppins(
@@ -269,7 +308,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
           }));
         },
         child: Container(
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             left: 8,
             right: 8,
           ),
@@ -711,8 +750,8 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                       styleUri:
                           'mapbox://styles/passmate/clg1cjh0g001e01r36s2p69m8',
                       cameraOptions: CameraOptions(
-                          bearing: _thisAttractionState['mapOrientation'] ??
-                              120.0,
+                          bearing:
+                              _thisAttractionState['mapOrientation'] ?? 120.0,
                           center: Point(
                                   coordinates: Position(
                                       widget.longitude, widget.latitude))

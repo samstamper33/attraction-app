@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:passmate/attraction_view.dart';
 import 'package:passmate/widgets/sidenav.dart';
@@ -18,6 +19,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passmate/widgets/update.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() => runApp(MyApp());
 const String baseUrl = 'https://passmatetest1.azurewebsites.net/api/Attraction';
@@ -77,7 +79,7 @@ class _DiscoverAppState extends State<DiscoverApp> {
     _getPackageInfo();
     Future<dynamic> get() async {
       // Get the user's location
-      Position position = await Geolocator.getCurrentPosition();
+      // Position position = await Geolocator.getCurrentPosition();
       var url = Uri.parse(baseUrl);
       String basicAuth =
           'Basic ' + base64.encode(utf8.encode('passmateapp:passmateapppass'));
@@ -112,8 +114,41 @@ class _DiscoverAppState extends State<DiscoverApp> {
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      final snackBar =
+          SnackBar(content: Container(
+            height: 300,
+            child: Column(
+              children: [
+                Text(message.notification?.title ?? ''),
+                Text(message.notification?.body ?? ''),
+                Image.network(message.notification?.apple?.imageUrl ?? '')
+              ],
+            ),
+          ));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _asyncMethod();
+
+    init() async {
+      String deviceToken = await getDeviceToken();
+      print('################# THIS IS THE DEVICE TOKEN#################');
+      print(deviceToken);
+    }
+  }
+
+  Future getDeviceToken() async {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    String? deviceToken = await _firebaseMessaging.getToken();
+    return (deviceToken ?? "");
   }
 
   List<dynamic> data = [0, 1, 2, 3];
@@ -136,19 +171,21 @@ class _DiscoverAppState extends State<DiscoverApp> {
           print(_attractionState[index]['id']);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => AttractionNavigatorPage(
-                  image: _attractionState[index]['attractionImage'],
-                  tileId: _attractionState[index]['rasterTileId'],
-                  name: _attractionState[index]['name'],
-                  attractionId: _attractionState[index]['id'],
-                  logo: _attractionState[index]['attractionLogo'],
-                  accent: _attractionState[index]['accentColorHex'],
-                  orientation: _attractionState[index]['mapOrientation'],
-                  boundsEast: _attractionState[index]['mapBounds']['east'],
-                  boundsNorth: _attractionState[index]['mapBounds']['north'],
-                  boundsSouth: _attractionState[index]['mapBounds']['south'],
-                  boundsWest: _attractionState[index]['mapBounds']['west'],
-                  longitude: _attractionState[index]['longitude'],
-                  latitude: _attractionState[index]['latitude'])));
+                    image: _attractionState[index]['attractionImage'],
+                    tileId: _attractionState[index]['rasterTileId'],
+                    name: _attractionState[index]['name'],
+                    attractionId: _attractionState[index]['id'],
+                    logo: _attractionState[index]['attractionLogo'],
+                    accent: _attractionState[index]['accentColorHex'],
+                    orientation: _attractionState[index]['mapOrientation'],
+                    boundsEast: _attractionState[index]['mapBounds']['east'],
+                    boundsNorth: _attractionState[index]['mapBounds']['north'],
+                    boundsSouth: _attractionState[index]['mapBounds']['south'],
+                    boundsWest: _attractionState[index]['mapBounds']['west'],
+                    longitude: _attractionState[index]['longitude'],
+                    latitude: _attractionState[index]['latitude'],
+                    isLoading: true,
+                  )));
         },
         child: Container(
           margin: EdgeInsets.only(
@@ -218,143 +255,6 @@ class _DiscoverAppState extends State<DiscoverApp> {
       ),
     );
   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     log(_showUpdateModal.toString());
-//     if (_showUpdateModal) {
-//       return DraggableScrollableSheet(
-//       initialChildSize: .8,
-//       maxChildSize: .99,
-//       builder: (BuildContext context, ScrollController scrollController) {
-//         return Container(
-//           padding: EdgeInsets.all(16),
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.only(
-//               topLeft: Radius.circular(16),
-//               topRight: Radius.circular(16),
-//             ),
-//           ),
-//           child: SingleChildScrollView(
-//             controller: scrollController,
-//             child: Column(
-//               mainAxisSize: MainAxisSize.min,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Lottie.asset('assets/update_animation.json'),
-//                 SizedBox(height: 14),
-//                 Text(
-//                   'Time to update!',
-//                   style: GoogleFonts.quicksand(
-//                     color: Colors.black,
-//                     fontSize: 18,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 SizedBox(height: 14),
-//                 Text(
-//                   'We added new features and fixed some bugs to make sure your experience is as smooth as possible.',
-//                   textAlign: TextAlign.center,
-//                   style: GoogleFonts.quicksand(
-//                     color: Colors.black,
-//                     fontSize: 14,
-//                     fontWeight: FontWeight.w500,
-//                   ),
-//                 ),
-//                 SizedBox(height: 40),
-//                 ElevatedButton(
-//                   style: ButtonStyle(
-//                     backgroundColor: MaterialStateProperty.all(Color(0xFF10cccd)),
-//                   ),
-//                   onPressed: () {
-//                     var url;
-//                     if (Platform.isAndroid) {
-//                       url = Uri.parse(
-//                           'https://play.google.com/store/apps/details?id=com.passmate.companion');
-//                     } else if (Platform.isIOS) {
-//                       url = Uri.parse(
-//                           'https://apps.apple.com/us/app/passmate-attraction-companion/id6446158862');
-//                     }
-//                     launchUrl(url, mode: LaunchMode.externalApplication);
-//                   },
-//                   child: Padding(
-//                     padding: const EdgeInsets.only(top: 8.0, bottom: 10, left: 12, right: 12),
-//                     child: Text(
-//                       'Update',
-//                       style: GoogleFonts.quicksand(
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.w600,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-//     return Scaffold(
-//       key: _scaffoldKey,
-//       appBar: AppBar(
-//         centerTitle: true,
-//         backgroundColor: Color.fromARGB(0, 255, 255, 255),
-//         shadowColor: Color.fromARGB(0, 255, 255, 255),
-//         leading: GestureDetector(
-//           onTap: () => _scaffoldKey.currentState?.openDrawer(),
-//           child: Padding(
-//             padding: const EdgeInsets.only(left: 24.0, right: 12),
-//             child: Image.asset('assets/Frame.png'),
-//             // child: Image.asset('assets/Frame.png'),
-//           ),
-//         ),
-//         title: Image.asset(
-//           'assets/passmate_logo_text.png',
-//           width: 140,
-//         ),
-//         // actions: [
-//         //   IconButton(
-//         //       onPressed: () {},
-//         //       icon: Icon(
-//         //         Icons.map_outlined,
-//         //         color: Colors.black,
-//         //         size: 28,
-//         //       ))
-//         // ],
-//       ),
-//       drawer: buildDrawer(context, DiscoverPage().toString()),
-//       body: Container(
-//           child: Column(
-//         children: [
-//           Expanded(
-//               child: ScrollSnapList(
-//             itemBuilder: _buildItemList,
-//             // itemCount: _attractionState.length,
-//             itemCount: _attractionState.length,
-//             itemSize: 356,
-//             dynamicItemSize: true,
-//             dynamicSizeEquation: (distance) {
-//               if (distance > 0) {
-//                 return 1 -
-//                     0.05 * distance / MediaQuery.of(context).size.width / 2;
-//               } else {
-//                 return 1 +
-//                     0.05 * distance / MediaQuery.of(context).size.width / 2;
-//               }
-//             },
-//             onItemFocus: _onItemFocus,
-//             onReachEnd: () {
-//               print('Done');
-//             },
-//           ))
-//         ],
-//       )),
-//     );
-//   }
-// }
 
   @override
   Widget build(BuildContext context) {
@@ -435,12 +335,4 @@ class _DiscoverAppState extends State<DiscoverApp> {
                 builder: updateSlider))
     ]);
   }
-
-// class _LoadingScreenState extends DiscoverApp {
-//   void getLocation() async {
-//     Position position = await Geolocator.getCurrentPosition(
-//         desiredAccuracy: LocationAccuracy.low);
-//     print(position);
-//   }
-// }
 }

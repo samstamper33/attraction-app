@@ -6,11 +6,12 @@ import 'dart:ffi';
 // import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-// import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:cupertino_modal_sheet/cupertino_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as latlng;
@@ -26,6 +27,7 @@ import 'package:passmate/search_page.dart';
 import 'package:collection/collection.dart';
 import 'attraction_view.dart';
 import 'package:passmate/geolocator.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:passmate/widgets/sidenav.dart';
 
 const String baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
@@ -87,136 +89,6 @@ class FullMap extends StatefulWidget {
   State createState() => FullMapState();
 }
 
-class AnnotationClickListener extends OnPointAnnotationClickListener {
-  MapboxMap mapboxMap;
-  PointAnnotationManager pointAnnotationManager;
-  List<PointAnnotation?> annotationList;
-  int index;
-  // List images;
-  String oldAnnotationID;
-  FullMapState parentState;
-
-  AnnotationClickListener(
-      {required this.pointAnnotationManager,
-      required this.annotationList,
-      required this.mapboxMap,
-      required this.index,
-      // required this.images,
-      required this.oldAnnotationID,
-      required this.parentState});
-
-  @override
-  onPointAnnotationClick(PointAnnotation annotation) {
-    log('Old current ID: $oldAnnotationID');
-    log('New current ID: $oldAnnotationID');
-    parentState.annotationList = annotationList;
-    parentState.oldAnnotationID = oldAnnotationID;
-    // reset old marker
-    if (oldAnnotationID != '1') {
-      var oldAnnotation = annotationList.firstWhere(
-          (annotation) => annotation!.id.toString() == oldAnnotationID);
-
-      oldAnnotation!.iconSize = .25;
-      pointAnnotationManager.update(oldAnnotation);
-
-      TransitionOptions(duration: 200);
-    }
-    // create new marker
-    var currentAnnotation = annotationList[0];
-    var oldIconImage = annotation.iconImage.toString();
-    log(annotation.iconImage.toString());
-    annotation.iconImage = oldIconImage.replaceAll('Unselected', 'Selected');
-    annotation.iconSize = .29;
-    pointAnnotationManager.update(annotation);
-    oldAnnotationID = annotation.id;
-    // fly to
-    // var point = Point.fromJson((annotation.geometry)!.cast());
-    // log(annotation.geometry!.entries.contains('-').toString());
-    // mapboxMap.flyTo(
-    //     CameraOptions(
-    //         center: Point(
-    //                 coordinates: Position(point.coordinates.lng.toDouble(),
-    //                     point.coordinates.lat.toDouble()))
-    //             .toJson(),
-    //         ),
-    //     MapAnimationOptions(duration: 200, startDelay: 0));
-
-    // popup
-    parentState.setState(() {
-      final type = parentState
-          ._filteredAttractionMap[annotation.textOpacity!.toInt()]['type'];
-      String typeString;
-      switch (type) {
-        case 1:
-          typeString = 'Rides';
-          break;
-        case 2:
-          typeString = 'Water Rides';
-          break;
-        case 3:
-          typeString = 'Water Play';
-          break;
-        case 4:
-          typeString = 'Natural Wonders';
-          break;
-        case 5:
-          typeString = 'Animals';
-          break;
-        case 6:
-          typeString = 'Aquatic Animals';
-          break;
-        case 7:
-          typeString = 'Shops';
-          break;
-        case 8:
-          typeString = 'Dining';
-          break;
-        case 9:
-          typeString = 'Drinks';
-          break;
-        case 10:
-          typeString = 'Treats';
-          break;
-        case 11:
-          typeString = 'Shows';
-          break;
-        case 12:
-          typeString = 'Attractions';
-          break;
-        case 13:
-          typeString = 'Reptiles';
-          break;
-        case 14:
-          typeString = 'Emergency';
-          break;
-        case 15:
-          typeString = 'Games';
-          break;
-        case 16:
-          typeString = 'Restrooms';
-          break;
-        case 17:
-          typeString = 'Services';
-          break;
-        case 18:
-          typeString = 'Entrance';
-          break;
-        default:
-          typeString = 'Unknown';
-      }
-      parentState.currentTypeString = typeString;
-      log('Current Type String${parentState.currentTypeString}');
-      parentState.isVisible = true;
-      parentState._pointAnnotationManager = pointAnnotationManager;
-      parentState.selectedAnnotation = annotation;
-      log(parentState.selectedAnnotation!.id.toString());
-      parentState.listIndex =
-          parentState.selectedAnnotation?.textOpacity!.toInt();
-      log('this is index ${parentState.listIndex}');
-    });
-  }
-}
-
 class FullMapState extends State<FullMap> {
   MapboxMap? mapboxMap;
   OnMapTapListener? onMapTapListener;
@@ -233,14 +105,15 @@ class FullMapState extends State<FullMap> {
   bool isVisible = false;
   final GlobalKey<ScaffoldState> _attractionScaffoldKey =
       GlobalKey<ScaffoldState>();
+  // GeoFlutterFire geo = GeoFlutterFire();
 
   // List pointAnnotationList = <PointAnnotation>[];
   _onTap(ScreenCoordinate coordinate) {
     log('This is for the _onTap function $oldAnnotationID');
     log(annotationList.map((annotation) => annotation!.id).toString());
     var isWithinRange = _filteredAttractionMap.any((annotation) =>
-        (annotation['latitude'] - coordinate.x).abs() <= 0.00005 &&
-        (annotation['longitude'] - coordinate.y).abs() <= 0.00005);
+        (annotation['latitude'] - coordinate.x).abs() <= 0.00008 &&
+        (annotation['longitude'] - coordinate.y).abs() <= 0.00008);
     if (isWithinRange && selectedAnnotation!.iconOpacity != 0) {
       mapboxMap?.easeTo(
           CameraOptions(
@@ -260,12 +133,6 @@ class FullMapState extends State<FullMap> {
         log(_pointAnnotationManager.toString());
         _pointAnnotationManager?.update(selectedAnnotation!);
       }
-      // log('This is your selected annotation ${selectedAnnotation!.id}');
-      // selectedAnnotation!.iconSize = .2;
-      // log('size');
-      // pointAnnotationManager?.update(selectedAnnotation!);
-      // log("this isn't within range");
-      // selectedAnnotation = null;
       setState(() {
         selectedAnnotation = null;
         log(selectedAnnotation.toString());
@@ -293,6 +160,12 @@ class FullMapState extends State<FullMap> {
         onMapTapListener;
       });
     });
+    await mapboxMap!.location.updateSettings(LocationComponentSettings(
+        enabled: true,
+        showAccuracyRing: true,
+        puckBearingEnabled: true,
+        pulsingEnabled: true,
+        locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
     // mapboxMap?.onMapTapListener ==
     //     (point, coordinates) {
     //       setState(() {
@@ -305,31 +178,7 @@ class FullMapState extends State<FullMap> {
     setState(() {
       _pointAnnotationManager = pointAnnotationManager;
     });
-    // widget.pointAnnotationManager = pointAnnotationManager;
     var poiOptions = <PointAnnotationOptions>[];
-    // var imageURLs = [];
-    // for (var i = 0; i < _filteredAttractionMap.length; i++) {
-    //   imageURLs.add(_filteredAttractionMap[i]['iconUnselected']);
-    // }
-    // // log(imageURLs.toString());
-    // var client = http.Client();
-    // getAllImages() async {
-    //   return Future.wait(
-    //       imageURLs.map((url) => client.get(Uri.parse(url)).then((response) {
-    //             mapboxMap?.style.addStyleImage(
-    //                 "Marker Shape",
-    //                 1.0,
-    //                 MbxImage(width: 20, height: 20, data: response.bodyBytes),
-    //                 true,
-    //                 [],
-    //                 [],
-    //                 null);
-    //             return response.bodyBytes;
-    //           })));
-    // }
-
-    // ;
-    // var images = await getAllImages();
     log('This is for testing purposes ${_filteredAttractionMap.length}');
     for (var i = 0; i < _filteredAttractionMap.length; i++) {
       final type = _filteredAttractionMap[i]['type'];
@@ -433,7 +282,34 @@ class FullMapState extends State<FullMap> {
     });
   }
 
+  bool refreshAnnotationsOnce = true;
+  _onStyleDataLoadedListener(StyleDataLoadedEventData data) {
+    if (kDebugMode) {
+      print(
+          "MapBoxEvent: StyleDataLoadedEventData: begin: ${data.begin}, end: ${data.end}");
+      //Suppress code when 2DPuck loading is fixed
+      if (refreshAnnotationsOnce) {
+        mapboxMap?.loadStyleURI(
+            'mapbox://styles/passmate/clg1cjh0g001e01r36s2p69m8');
+        // mapboxMap?.location.updateSettings(LocationComponentSettings(
+        //     enabled: true,
+        //     showAccuracyRing: true,
+        //     puckBearingEnabled: true,
+        //     pulsingEnabled: true,
+        //     locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
+        refreshAnnotationsOnce = false;
+        log('refreshed dis shit');
+      }
+    }
+  }
+
   _onMapCreated(MapboxMap mapboxMap) {
+    // mapboxMap.location.updateSettings(LocationComponentSettings(
+    //     enabled: true,
+    //     showAccuracyRing: true,
+    //     puckBearingEnabled: true,
+    //     pulsingEnabled: true,
+    //     locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
     mapboxMap.compass.updateSettings(settings);
     mapboxMap.setBounds(widget.cameraOptions());
     mapboxMap.scaleBar.updateSettings(scaleSettings);
@@ -441,11 +317,11 @@ class FullMapState extends State<FullMap> {
     // print('onMapCreated called');
     this.mapboxMap = mapboxMap;
     // log('create annotation');
-    mapboxMap.location.updateSettings(LocationComponentSettings(
-        showAccuracyRing: true,
-        puckBearingEnabled: true,
-        pulsingEnabled: true,
-        locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
+    // mapboxMap.location.updateSettings(LocationComponentSettings(
+    //     showAccuracyRing: true,
+    //     puckBearingEnabled: true,
+    //     pulsingEnabled: true,
+    //     locationPuck: LocationPuck(locationPuck2D: LocationPuck2D())));
   }
 
   Point createRandomPoint() {
@@ -625,6 +501,7 @@ class FullMapState extends State<FullMap> {
           widget.logo, widget.name, widget.accent, widget.image),
       body: Stack(children: [
         MapWidget(
+            onStyleDataLoadedListener: _onStyleDataLoadedListener,
             onTapListener: _onTap,
             onStyleLoadedListener: _onStyleLoaded,
             onSourceAddedListener: (sourceAddedEventData) {
@@ -1309,4 +1186,123 @@ class FullMapState extends State<FullMap> {
     );
   }
   // ]);
+}
+
+class AnnotationClickListener extends OnPointAnnotationClickListener {
+  MapboxMap mapboxMap;
+  PointAnnotationManager pointAnnotationManager;
+  List<PointAnnotation?> annotationList;
+  int index;
+  // List images;
+  String oldAnnotationID;
+  FullMapState parentState;
+
+  AnnotationClickListener(
+      {required this.pointAnnotationManager,
+      required this.annotationList,
+      required this.mapboxMap,
+      required this.index,
+      // required this.images,
+      required this.oldAnnotationID,
+      required this.parentState});
+
+  @override
+  onPointAnnotationClick(PointAnnotation annotation) {
+    log('Old current ID: $oldAnnotationID');
+    log('New current ID: $oldAnnotationID');
+    parentState.annotationList = annotationList;
+    parentState.oldAnnotationID = oldAnnotationID;
+    // reset old marker
+    if (oldAnnotationID != '1') {
+      var oldAnnotation = annotationList.firstWhere(
+          (annotation) => annotation!.id.toString() == oldAnnotationID);
+
+      oldAnnotation!.iconSize = .25;
+      pointAnnotationManager.update(oldAnnotation);
+
+      TransitionOptions(duration: 200);
+    }
+    // create new marker
+    var currentAnnotation = annotationList[0];
+    var oldIconImage = annotation.iconImage.toString();
+    log(annotation.iconImage.toString());
+    annotation.iconImage = oldIconImage.replaceAll('Unselected', 'Selected');
+    annotation.iconSize = .29;
+    pointAnnotationManager.update(annotation);
+    oldAnnotationID = annotation.id;
+
+    // popup
+    parentState.setState(() {
+      final type = parentState
+          ._filteredAttractionMap[annotation.textOpacity!.toInt()]['type'];
+      String typeString;
+      switch (type) {
+        case 1:
+          typeString = 'Rides';
+          break;
+        case 2:
+          typeString = 'Water Rides';
+          break;
+        case 3:
+          typeString = 'Water Play';
+          break;
+        case 4:
+          typeString = 'Natural Wonders';
+          break;
+        case 5:
+          typeString = 'Animals';
+          break;
+        case 6:
+          typeString = 'Aquatic Animals';
+          break;
+        case 7:
+          typeString = 'Shops';
+          break;
+        case 8:
+          typeString = 'Dining';
+          break;
+        case 9:
+          typeString = 'Drinks';
+          break;
+        case 10:
+          typeString = 'Treats';
+          break;
+        case 11:
+          typeString = 'Shows';
+          break;
+        case 12:
+          typeString = 'Attractions';
+          break;
+        case 13:
+          typeString = 'Reptiles';
+          break;
+        case 14:
+          typeString = 'Emergency';
+          break;
+        case 15:
+          typeString = 'Games';
+          break;
+        case 16:
+          typeString = 'Restrooms';
+          break;
+        case 17:
+          typeString = 'Services';
+          break;
+        case 18:
+          typeString = 'Entrance';
+          break;
+        default:
+          typeString = 'Unknown';
+      }
+      parentState.currentTypeString = typeString;
+      log('Current Type String${parentState.currentTypeString}');
+      parentState.isVisible = true;
+      parentState._pointAnnotationManager = pointAnnotationManager;
+      parentState.selectedAnnotation = annotation;
+      log(parentState.selectedAnnotation!.id.toString());
+      parentState.listIndex =
+          parentState.selectedAnnotation?.textOpacity!.toInt();
+      log('this is index ${parentState.listIndex}');
+    });
+  }
 }

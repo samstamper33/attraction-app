@@ -11,7 +11,10 @@ class SearchPage extends StatefulWidget {
   late double orientation;
   String attractionId;
   String tileId;
-  SearchPage({required this.attractionId, required this.orientation, required this.tileId});
+  SearchPage(
+      {required this.attractionId,
+      required this.orientation,
+      required this.tileId});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -168,46 +171,52 @@ class _SearchPageState extends State<SearchPage> {
                   typeString = 'Water Rides';
                   break;
                 case 3:
-                  typeString = 'Animals';
+                  typeString = 'Water Play';
                   break;
                 case 4:
-                  typeString = 'Aquatic Animals';
+                  typeString = 'Natural Wonders';
                   break;
                 case 5:
-                  typeString = 'Shops';
+                  typeString = 'Animals';
                   break;
                 case 6:
-                  typeString = 'Dining';
+                  typeString = 'Aquatic Animals';
                   break;
                 case 7:
-                  typeString = 'Drinks';
+                  typeString = 'Shops';
                   break;
                 case 8:
-                  typeString = 'Treats';
+                  typeString = 'Dining';
                   break;
                 case 9:
-                  typeString = 'Shows';
+                  typeString = 'Drinks';
                   break;
                 case 10:
-                  typeString = 'Attractions';
+                  typeString = 'Treats';
                   break;
                 case 11:
-                  typeString = 'Reptiles';
+                  typeString = 'Shows';
                   break;
                 case 12:
-                  typeString = 'Emergency';
+                  typeString = 'Attractions';
                   break;
                 case 13:
-                  typeString = 'Games';
+                  typeString = 'Reptiles';
                   break;
                 case 14:
-                  typeString = 'Restrooms';
+                  typeString = 'Emergency';
                   break;
                 case 15:
-                  typeString = 'Services';
+                  typeString = 'Games';
                   break;
                 case 16:
-                  typeString = 'Entrance / Exit';
+                  typeString = 'Restrooms';
+                  break;
+                case 17:
+                  typeString = 'Services';
+                  break;
+                case 18:
+                  typeString = 'Entrance';
                   break;
                 default:
                   typeString = 'Unknown';

@@ -23,6 +23,7 @@ class AttractionNavigatorPage extends StatefulWidget {
   late double orientation;
   late double longitude;
   late double latitude;
+  bool isLoading;
   AttractionNavigatorPage(
       {required this.attractionId,
       required this.image,
@@ -30,13 +31,15 @@ class AttractionNavigatorPage extends StatefulWidget {
       required this.tileId,
       required this.accent,
       required this.logo,
+      required this.isLoading,
       required this.orientation,
       required this.boundsEast,
       required this.boundsNorth,
       required this.boundsSouth,
       required this.boundsWest,
       required this.longitude,
-      required this.latitude});
+      required this.latitude,
+      Object? arguments});
 
   @override
   State<AttractionNavigatorPage> createState() =>
@@ -46,7 +49,7 @@ class AttractionNavigatorPage extends StatefulWidget {
 class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
   late List<Widget> _pages;
   int navigationIndex = 0;
-  bool isLoading = true;
+  // bool isLoading = isLoading;
   bool isAnimating = true;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,10 +65,10 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
 
   void _handleDrawerGesture(DragUpdateDetails details) {
     // if (details.delta.dx > 0) {
-      // user is swiping from left to right
-      _scaffoldKey.currentState?.openDrawer();
-      // disable the pop gesture
-      Navigator.of(context).pop();
+    // user is swiping from left to right
+    _scaffoldKey.currentState?.openDrawer();
+    // disable the pop gesture
+    Navigator.of(context).pop();
     // }
   }
 
@@ -96,18 +99,20 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
           boundsSouth: widget.boundsSouth,
           attractionId: widget.attractionId,
           longitude: widget.longitude,
-          latitude: widget.latitude
-      )
+          latitude: widget.latitude)
     ];
     // baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
     // _asyncAttractionMethod();
     navigationIndex = (0);
     // _asyncAttractionOfferMethod();
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        isLoading = false;
+    if (widget.isLoading) {
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          widget.isLoading = false;
+        });
       });
-    });
+    }
+    ;
   }
 
   @override
@@ -183,7 +188,7 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
               index: navigationIndex,
               children: _pages,
             )),
-        if (isLoading)
+        if (widget.isLoading)
           Opacity(
               opacity: 1,
               child: loadingPage(

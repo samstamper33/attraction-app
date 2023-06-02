@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "682031837044",
+    "project_id": "passmate-push-notifications",
+    "storage_bucket": "passmate-push-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682031837044:android:99b5d41402772adfb24621",
+        "android_client_info": {
+          "package_name": "com.passmate.companion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrABgeQktfSLqsZCAdP57s4ev8nCG4wyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

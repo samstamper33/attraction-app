@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:passmate/discover.dart';
@@ -14,9 +16,12 @@ Widget _buildMenuItem(
     selected: isSelected,
     onTap: () {
       if (isSelected) {
+        log('Hello! Your current route is $routeName');
         Navigator.pop(context);
       } else if (routeName == '/discover') {
-        Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> r) => false);
+        log('Your current route is $routeName');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> r) => false);
       } else {
         Navigator.pushNamed(context, routeName);
       }
@@ -176,9 +181,9 @@ Drawer buildAttractionDrawer(BuildContext context, String currentRoute,
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-                // image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
-                color: Color(int.parse('0xFF${hex}')),
-                ),
+              // image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
+              color: Color(int.parse('0xFF${hex}')),
+            ),
             height: 240,
             padding: EdgeInsets.only(top: 0),
             margin: EdgeInsets.only(top: 0),
@@ -239,15 +244,14 @@ Drawer buildAttractionDrawer(BuildContext context, String currentRoute,
                       const Spacer(),
                       Container(
                         alignment: Alignment.bottomCenter,
-                        child: 
-                          Text(
-                            'powered by passmate',
-                            style: GoogleFonts.poppins(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                // color: Color(0xFF3ACCE1),
-                                fontWeight: FontWeight.w100,
-                                fontSize: 14),
-                          ),
+                        child: Text(
+                          'powered by passmate',
+                          style: GoogleFonts.poppins(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              // color: Color(0xFF3ACCE1),
+                              fontWeight: FontWeight.w100,
+                              fontSize: 14),
+                        ),
                       )
                     ]),
               ),
@@ -290,7 +294,8 @@ Drawer buildAttractionDrawer(BuildContext context, String currentRoute,
                           ],
                         ),
                         '/discover',
-                        currentRoute),
+                        currentRoute, 
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 22.0),

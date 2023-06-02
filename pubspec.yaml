@@ -39,17 +39,25 @@ dependencies:
   # flutter_map: ^3.0.0
   floating_search_bar: ^0.3.0
   flutter_statusbarcolor_ns: ^0.5.0
-  syncfusion_flutter_maps: ^20.3.60
+  syncfusion_flutter_maps: ^21.2.8
   scroll_snap_list: ^0.9.1
   google_fonts: ^4.0.3
   in_app_webview: ^0.0.9
   # flutter_map_marker_popup: ^4.0.1
   lottie: ^2.2.0
-  flutter_map_location_marker: ^5.2.1
+  flutter_map_location_marker: ^6.0.0
   geolocator: ^9.0.2
   mapbox_maps_flutter: ^0.4.1
-  package_info_plus: ^3.0.3
+  package_info_plus: ^4.0.2
   url_launcher: ^6.1.10
+  shared_preferences: ^2.1.1
+  cupertino_modal_sheet: ^1.0.0
+  firebase_messaging: ^14.6.2
+  firebase_core: ^2.13.1
+  overlay_support: ^2.1.0
+  firebase_analytics: ^10.4.2
+  flutter_local_notifications: ^14.1.1
+  # geoflutterfire2: ^2.3.15
 
 
 dev_dependencies:
