@@ -22,31 +22,34 @@ class GeoFencing {
   List<Map<String, dynamic>> userOffers = [];
   Set<String> registeredGeofences = {};
   Function(List<Map<String, dynamic>>) onUserOffersUpdated = (userOffers) {};
-  StreamController<List<Map<String, dynamic>>> _userOffersController =
-      StreamController<List<Map<String, dynamic>>>();
+  final _userOffersController =
+      BehaviorSubject<List<Map<String, dynamic>>>.seeded([]);
 
-  late Stream<List<Map<String, dynamic>>> userOffersStream =
+  // StreamController<List<Map<String, dynamic>>> _userOffersController =
+  //     StreamController<List<Map<String, dynamic>>>();
+
+  Stream<List<Map<String, dynamic>>> get userOffersStream =>
       _userOffersController.stream;
 
   // Method to update userOffers and notify listeners
   void updateUserOffers(List<Map<String, dynamic>> updatedUserOffers) {
-    userOffers = [...updatedUserOffers];
+    userOffers = updatedUserOffers;
     // _userOffersController.add(userOffers);
-    _userOffersController.sink
+    _userOffersController
         .add(userOffers); // Notify listeners of the updated list
     print('Updated userOffers: $userOffers');
   }
 
-  GeoFencing() {
-    _userOffersController = BehaviorSubject<List<Map<String, dynamic>>>.seeded(
-      userOffers,
-    );
+  // GeoFencing() {
+  //   _userOffersController = BehaviorSubject<List<Map<String, dynamic>>>.seeded(
+  //     userOffers,
+  //   );
 
-    // Listen to userOffersStream and print the streamed values
-    // userOffersStream.listen((offers) {
-    //   log('Streamed userOffers: $offers');
-    // });
-  }
+  //   // Listen to userOffersStream and print the streamed values
+  //   // userOffersStream.listen((offers) {
+  //   //   log('Streamed userOffers: $offers');
+  //   // });
+  // }
 
   void dispose() {
     _userOffersController.close();
@@ -143,6 +146,12 @@ class GeoFencing {
     if (event == GeofenceEvent.enter) {
       notificationTitle = locationNotification['title'];
       notificationBody = locationNotification['message'];
+      userOffers.add(locationNotification);
+      storeUserOffers();
+      GeoFencing().updateUserOffers(userOffers);
+      _userOffersController
+          .add(userOffers); // Notify listeners of the updated list
+      print('This is how many offers you have - ${userOffers.length}');
     } else if (event == GeofenceEvent.exit) {
       notificationTitle = 'Geofence Exited';
       notificationBody = 'You\'ve now exited the geofence.';
@@ -161,7 +170,7 @@ class GeoFencing {
       userOffers.add(locationNotification);
       storeUserOffers();
       GeoFencing().updateUserOffers(userOffers);
-      _userOffersController.sink
+      _userOffersController
           .add(userOffers); // Notify listeners of the updated list
       print('This is how many offers you have - ${userOffers.length}');
 

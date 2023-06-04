@@ -708,7 +708,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                       },
                       resourceOptions: ResourceOptions(
                           accessToken:
-                              'pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q')),
+                              'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
                 ),
                 Container(
                   height: 440,

@@ -102,8 +102,7 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
           boundsSouth: widget.boundsSouth,
           attractionId: widget.attractionId,
           longitude: widget.longitude,
-          latitude: widget.latitude,
-          userOffers: geoFencing.userOffers)
+          latitude: widget.latitude,)
     ];
     // baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
     // _asyncAttractionMethod();

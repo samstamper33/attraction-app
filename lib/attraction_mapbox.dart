@@ -50,7 +50,6 @@ class FullMap extends StatefulWidget {
   String image;
   String tileId;
   String attractionId;
-  final List<Map<String, dynamic>> userOffers;
   late double boundsNorth;
   late double orientation;
   late double boundsSouth;
@@ -59,21 +58,21 @@ class FullMap extends StatefulWidget {
   late double longitude;
   late double latitude;
 
-  FullMap(
-      {required this.attractionId,
-      required this.accent,
-      required this.name,
-      required this.image,
-      required this.tileId,
-      required this.logo,
-      required this.boundsEast,
-      required this.boundsNorth,
-      required this.orientation,
-      required this.boundsSouth,
-      required this.boundsWest,
-      required this.longitude,
-      required this.latitude,
-      required this.userOffers});
+  FullMap({
+    required this.attractionId,
+    required this.accent,
+    required this.name,
+    required this.image,
+    required this.tileId,
+    required this.logo,
+    required this.boundsEast,
+    required this.boundsNorth,
+    required this.orientation,
+    required this.boundsSouth,
+    required this.boundsWest,
+    required this.longitude,
+    required this.latitude,
+  });
   CameraBoundsOptions cameraOptions() {
     return CameraBoundsOptions(
       maxZoom: 19.5,
@@ -474,7 +473,7 @@ class FullMapState extends State<FullMap> {
     });
   }
 
-  final userOffersProvider = UserOffersProvider();
+  // final userOffersProvider = UserOffersProvider();
 
   GeoFencing geoFencing = GeoFencing();
   late List<Map<String, dynamic>> userOffers;
@@ -484,9 +483,9 @@ class FullMapState extends State<FullMap> {
   void subscribeToUserOffers() {
     _userOffersSubscription = geoFencing.userOffersStream.listen(
       (offers) {
-        setState(() {
+        print('got something here');
+        
           userOffers = offers;
-        });
       },
       onError: (error) {
         print("Error occurred: $error"); // Print any error that occurs
@@ -504,17 +503,14 @@ class FullMapState extends State<FullMap> {
   @override
   void initState() {
     geoFencing.init();
-    super.initState();
-        geoFencing.userOffersStream.listen((data) {
+    userOffers = geoFencing.userOffers;
+    geoFencing.userOffersStream.listen((data) {
       print('Stream data in the place it wont stream: $data');
-      setState(() {
-        userOffers = data;
-        print('RECEIVED DATA FROM STREAM $userOffers');
-      });
     });
     userOffersStream = geoFencing.userOffersStream;
     subscribeToUserOffers();
-    // userOffers = geoFencing.userOffers;
+    super.initState();
+
     _pointAnnotationManager;
     onMapTapListener;
     _selectedFilters;
@@ -522,9 +518,6 @@ class FullMapState extends State<FullMap> {
     navigationIndex = (0);
     _asyncAttractionMethod();
     _asyncAttractionMapMethod();
-    // final geofencing.GeoFencing geoFencing = geofencing.GeoFencing();
-    // getUserOffers();
-    // print(object)
   }
 
   // @override
@@ -1274,33 +1267,33 @@ class FullMapState extends State<FullMap> {
                 //     print('RECEIVED DATA FROM STREAM $data');
                 //   });
                 // });
-                if (userOffers.isEmpty) {
-                  // Render the lottie animation and text
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Lottie.network(
-                            'https://assets5.lottiefiles.com/packages/lf20_0xxka1td.json', // Replace with your animation asset path
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Unlock offers and messages by walking around the park',
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
+                // if (userOffers.isEmpty) {
+                //   // Render the lottie animation and text
+                //   showDialog(
+                //     context: context,
+                //     builder: (_) => AlertDialog(
+                //       content: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Lottie.network(
+                //             'https://assets5.lottiefiles.com/packages/lf20_0xxka1td.json', // Replace with your animation asset path
+                //             width: 200,
+                //             height: 200,
+                //             fit: BoxFit.contain,
+                //           ),
+                //           const SizedBox(height: 16),
+                //           Text(
+                //             'Unlock offers and messages by walking around the park',
+                //             style: GoogleFonts.inter(
+                //                 fontWeight: FontWeight.w500,
+                //                 fontSize: 16,
+                //                 color: Colors.black),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   );
+                // } else {
                   showCupertinoModalSheet(
                     context: context,
                     builder: (BuildContext context) => CupertinoPageScaffold(
@@ -1347,6 +1340,7 @@ class FullMapState extends State<FullMap> {
                             ),
                             Expanded(
                               child: StreamBuilder(
+                                initialData: userOffers,
                                 stream: userOffersStream,
                                 builder: (context, snapshot) {
                                   print("Streambuilder Rebuilt!!!!!!!");
@@ -1421,7 +1415,7 @@ class FullMapState extends State<FullMap> {
                       ),
                     ),
                   );
-                }
+                // }
 
                 // color: Colors.white,
                 // height: 800,
