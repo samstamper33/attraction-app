@@ -7,6 +7,7 @@ import 'package:passmate/attraction_view.dart';
 import 'package:passmate/attraction_loading.dart';
 import 'package:passmate/widgets/sidenav.dart';
 import 'package:passmate/attraction_mapbox.dart';
+import 'geofencing.dart' as geofencing;
 // import 'package:passmate/flutter_map.dart';
 
 class AttractionNavigatorPage extends StatefulWidget {
@@ -49,7 +50,7 @@ class AttractionNavigatorPage extends StatefulWidget {
 class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
   late List<Widget> _pages;
   int navigationIndex = 0;
-  // bool isLoading = isLoading;
+  // bool isLoading = widget.isLoading;
   bool isAnimating = true;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,6 +63,8 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
       // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     });
   }
+
+  geofencing.GeoFencing geoFencing = geofencing.GeoFencing();
 
   void _handleDrawerGesture(DragUpdateDetails details) {
     // if (details.delta.dx > 0) {
@@ -99,7 +102,8 @@ class _AttractionNavigatorPageState extends State<AttractionNavigatorPage> {
           boundsSouth: widget.boundsSouth,
           attractionId: widget.attractionId,
           longitude: widget.longitude,
-          latitude: widget.latitude)
+          latitude: widget.latitude,
+          userOffers: geoFencing.userOffers)
     ];
     // baseUrl = 'https://passmatetest1.azurewebsites.net/api/';
     // _asyncAttractionMethod();

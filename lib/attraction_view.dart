@@ -6,6 +6,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:passmate/widgets/sidenav.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:passmate/geofencing.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -192,12 +194,17 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
 
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      final locationNotifications =
+      final fetchedLocationNotifications =
           List<Map<String, dynamic>>.from(decodedResponse);
-      return locationNotifications;
+
+      setState(() {
+        locationNotifications = fetchedLocationNotifications;
+      });
+
+      // Pass location notifications to the GeoFencing class
+      geofencing.registerLocationNotifications(locationNotifications);
     } else {
       print(response.statusCode);
-      return null;
     }
   }
 
@@ -206,7 +213,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
   List _filteredAttractionMap = [];
   List _thisAttractionMapState = [];
   List filterResults = [];
-  List locationNotifications = [];
+  // List locationNotifications = [];
 
   GeoFencing geofencing = GeoFencing();
 
@@ -246,6 +253,8 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
   late String baseUrl;
   late String basicAuth;
   int navigationIndex = (0);
+  List<Map<String, dynamic>> locationNotifications = [];
+
   // void _onItemTapped(int index) {
   //   setState(() {
   //     navigationIndex = index;
@@ -269,6 +278,14 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
     // navigationIndex = (0);
     _asyncAttractionOfferMethod();
     _asyncAttractionMapMethod();
+    _getLocationNotifications();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (geofencing.displayedNotificationIds.isNotEmpty) {
+        print('Stored notificationIds: ${geofencing.displayedNotificationIds}');
+      } else {
+        print('No notificationIds stored.');
+      }
+    });
     log('Data is Loaded');
   }
 
@@ -448,78 +465,6 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                     print('Done');
                   },
                 )),
-            // SizedBox(
-            //   height: 16,
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.of(context)
-            //         .push(MaterialPageRoute(builder: (BuildContext) {
-            //       return InAppWebView(
-            //         _thisAttractionState['ticketingLink'] ??
-            //             'https://www.google.com',
-            //         appBarBGColor: Color(int.parse(
-            //             '0xFF${_thisAttractionState['accentColorHex']}')),
-            //         centerTitle: true,
-            //         titleWidget: Text(
-            //           _thisAttractionState['name'],
-            //           style: GoogleFonts.poppins(
-            //               color: Colors.white,
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 16),
-            //         ),
-            //       );
-            //     }));
-            //   },
-            //   child: Padding(
-            //     padding: EdgeInsets.only(left: 44, right: 44),
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //         border: Border.all(width: 2,color: Color(int.parse(
-            //             '0xFF${_thisAttractionState['accentColorHex']}'))),
-            //         borderRadius: BorderRadius.circular(20),
-            //         color: Colors.white,
-            //       ),
-            //       padding: EdgeInsets.only(left: 12, right: 12),
-            //       height: 64,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         children: [
-            //           Image.network(
-            //             _thisAttractionState['attractionLogo'] ?? '',
-            //             errorBuilder: (BuildContext context, Object exception,
-            //                 StackTrace? stackTrace) {
-            //               // Return a fallback image widget if the network image fails to load
-            //               return Container(
-            //                 height: 32,
-            //                 width: 32,
-            //               );
-            //             },
-            //             height: 28,
-            //           ),
-            //           SizedBox(
-            //             width: 16,
-            //           ),
-            //           Text(
-            //             'Buy Tickets',
-            //             style: GoogleFonts.poppins(
-            //                 fontSize: 18, fontWeight: FontWeight.w500, color: Color(int.parse(
-            //             '0xFF${_thisAttractionState['accentColorHex']}'))),
-            //           ),
-            //           Spacer(),
-            //           Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 20,
-            //             color: Color(int.parse(
-            //             '0xFF${_thisAttractionState['accentColorHex']}')),
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(height: 24,),
             Container(
                 padding: EdgeInsets.only(bottom: 12, left: 4),
                 alignment: Alignment.centerLeft,
@@ -763,7 +708,7 @@ class _AttractionViewPageState extends State<AttractionViewPage> {
                       },
                       resourceOptions: ResourceOptions(
                           accessToken:
-                              'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
+                              'pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q')),
                 ),
                 Container(
                   height: 440,

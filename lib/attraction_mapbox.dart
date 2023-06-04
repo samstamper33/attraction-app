@@ -2,9 +2,16 @@
 
 import 'dart:collection';
 import 'dart:developer';
+import 'package:rxdart/rxdart.dart';
+import 'package:provider/provider.dart';
+import 'package:passmate/geofencing.dart';
 import 'dart:ffi';
+import 'package:lottie/lottie.dart';
 // import 'dart:ffi';
 import 'dart:io';
+import 'dart:async';
+import 'package:rx_shared_preferences/rx_shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -18,12 +25,14 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:passmate/base_client.dart';
 import 'package:passmate/discover.dart';
+import 'user_offers_provider.dart';
 import 'package:passmate/poi.dart';
 import 'package:flutter/services.dart';
 import 'package:passmate/remote_services.dart';
 // import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:passmate/poi_info_page.dart';
 import 'package:passmate/search_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:collection/collection.dart';
 import 'attraction_view.dart';
 import 'package:passmate/geolocator.dart';
@@ -41,6 +50,7 @@ class FullMap extends StatefulWidget {
   String image;
   String tileId;
   String attractionId;
+  final List<Map<String, dynamic>> userOffers;
   late double boundsNorth;
   late double orientation;
   late double boundsSouth;
@@ -62,7 +72,8 @@ class FullMap extends StatefulWidget {
       required this.boundsSouth,
       required this.boundsWest,
       required this.longitude,
-      required this.latitude});
+      required this.latitude,
+      required this.userOffers});
   CameraBoundsOptions cameraOptions() {
     return CameraBoundsOptions(
       maxZoom: 19.5,
@@ -463,11 +474,47 @@ class FullMapState extends State<FullMap> {
     });
   }
 
+  final userOffersProvider = UserOffersProvider();
+
+  GeoFencing geoFencing = GeoFencing();
+  late List<Map<String, dynamic>> userOffers;
+
+  late StreamSubscription<List<Map<String, dynamic>>> _userOffersSubscription;
+
+  void subscribeToUserOffers() {
+    _userOffersSubscription = geoFencing.userOffersStream.listen(
+      (offers) {
+        setState(() {
+          userOffers = offers;
+        });
+      },
+      onError: (error) {
+        print("Error occurred: $error"); // Print any error that occurs
+      },
+      onDone: () {
+        print(
+            "Stream subscription completed"); // Print when the stream subscription is completed
+      },
+    );
+  }
+
+  Stream<List<Map<String, dynamic>>> userOffersStream =
+      Stream<List<Map<String, dynamic>>>.empty();
   List _filteredMap = [];
   @override
   void initState() {
+    geoFencing.init();
     super.initState();
-    // _selectedFilters = [];
+        geoFencing.userOffersStream.listen((data) {
+      print('Stream data in the place it wont stream: $data');
+      setState(() {
+        userOffers = data;
+        print('RECEIVED DATA FROM STREAM $userOffers');
+      });
+    });
+    userOffersStream = geoFencing.userOffersStream;
+    subscribeToUserOffers();
+    // userOffers = geoFencing.userOffers;
     _pointAnnotationManager;
     onMapTapListener;
     _selectedFilters;
@@ -475,7 +522,16 @@ class FullMapState extends State<FullMap> {
     navigationIndex = (0);
     _asyncAttractionMethod();
     _asyncAttractionMapMethod();
+    // final geofencing.GeoFencing geoFencing = geofencing.GeoFencing();
+    // getUserOffers();
+    // print(object)
   }
+
+  // @override
+  // void dispose() {
+  //   _userOffersSubscription?.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -521,7 +577,7 @@ class FullMapState extends State<FullMap> {
             },
             resourceOptions: ResourceOptions(
                 accessToken:
-                    'sk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2xnMHdrcHhyMWV5ZzNrcDZ6ZW8zdnF1bCJ9.OjYPKwZO2Dw2MunTOfGV1w')),
+                    'pk.eyJ1IjoicGFzc21hdGUiLCJhIjoiY2t4enExNnhzMnZsMjJvcDY1YWloaGNkdCJ9.5VlS7VGzbL-sUaU8XKi16Q')),
         if (selectedAnnotation != null &&
             selectedAnnotation!.iconOpacity != 0.0)
           AnimatedPositioned(
@@ -1182,6 +1238,202 @@ class FullMapState extends State<FullMap> {
                 ),
               )),
         ),
+        AnimatedPositioned(
+            duration:
+                const Duration(milliseconds: 120), // Duration of the animation
+            bottom: selectedAnnotation == null
+                ? 24
+                : 164, // Animate between 164 and 24 based on the value of isVisible
+            right: 24,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all(
+                  CircleBorder(
+                    // borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+              child: Container(
+                // width: 40,
+                height: 52,
+                child: const Icon(
+                  Icons.notifications,
+                  size: 32,
+                  color: Colors.grey,
+                ),
+              ),
+              onPressed: () {
+                // geoFencing.userOffersStream.listen((data) {
+                //   setState(() {
+                //     userOffers = data;
+                //     print('RECEIVED DATA FROM STREAM $data');
+                //   });
+                // });
+                if (userOffers.isEmpty) {
+                  // Render the lottie animation and text
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Lottie.network(
+                            'https://assets5.lottiefiles.com/packages/lf20_0xxka1td.json', // Replace with your animation asset path
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.contain,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Unlock offers and messages by walking around the park',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  showCupertinoModalSheet(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoPageScaffold(
+                      child: SafeArea(
+                        child: Material(
+                          child: Column(children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 24, top: 16, bottom: 16),
+                                  child: Text(
+                                    'Notifications',
+                                    style: GoogleFonts.inter(
+                                      // letterSpacing: 1,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 24.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(
+                                          context); // Add the code to close the modal here
+                                    },
+                                    child: Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.withOpacity(0.1),
+                                      ),
+                                      child: Icon(
+                                        Icons.close_rounded,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                              child: StreamBuilder(
+                                stream: userOffersStream,
+                                builder: (context, snapshot) {
+                                  print("Streambuilder Rebuilt!!!!!!!");
+                                  if (snapshot.hasData) {
+                                    List<Map<String, dynamic>> userOffers =
+                                        snapshot.data!;
+                                    return ListView.builder(
+                                      padding: const EdgeInsets.all(8),
+                                      itemCount: userOffers.length,
+                                      itemBuilder: (context, index) {
+                                        var offer = userOffers[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: ListTile(
+                                            leading: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              child: Image.network(
+                                                offer['image'],
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            title: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  offer['title'],
+                                                  style: GoogleFonts.quicksand(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    height: .7,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Text(
+                                                  offer['message'],
+                                                  style: GoogleFonts.quicksand(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 13,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                        'Error occurred: ${snapshot.error}');
+                                  } else {
+                                    print(
+                                        'This is the snapshot: ${snapshot.connectionState}');
+                                    return Text(
+                                        "I am flutter and I fucking suck");
+                                  }
+                                },
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                // color: Colors.white,
+                // height: 800,
+                // child: CupertinoPicker(
+                //     itemExtent: 40,
+                //     onSelectedItemChanged: (int index) {},
+                //     children: [
+                //       for (var offer in userOffers)
+                //         Text(offer['title']),
+                //     ]),
+              },
+            ))
       ]),
     );
   }

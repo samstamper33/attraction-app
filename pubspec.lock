@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
+  background_fetch:
+    dependency: transitive
+    description:
+      name: background_fetch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.6"
   boolean_selector:
     dependency: transitive
     description:
@@ -36,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  built_collection:
+    dependency: transitive
+    description:
+      name: built_collection
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.1"
   characters:
     dependency: transitive
     description:
@@ -92,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  dart_either:
+    dependency: transitive
+    description:
+      name: dart_either
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   dbus:
     dependency: transitive
     description:
@@ -99,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.8"
+  disposebag:
+    dependency: transitive
+    description:
+      name: disposebag
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.1"
   enum_to_string:
     dependency: transitive
     description:
@@ -202,6 +230,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_background_geolocation:
+    dependency: "direct main"
+    description:
+      name: flutter_background_geolocation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.11.0"
   flutter_compass:
     dependency: transitive
     description:
@@ -436,6 +471,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   overlay_support:
     dependency: "direct main"
     description:
@@ -555,6 +597,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.5"
+  rx_shared_preferences:
+    dependency: "direct main"
+    description:
+      name: rx_shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
+  rx_storage:
+    dependency: transitive
+    description:
+      name: rx_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.7"
+  rxdart_ext:
+    dependency: transitive
+    description:
+      name: rxdart_ext
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.9"
   scroll_snap_list:
     dependency: "direct main"
     description:

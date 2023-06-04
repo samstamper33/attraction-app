@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 // import 'dart:js';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:passmate/attraction_mapbox.dart';
+import 'user_offers_provider.dart';
 import 'package:passmate/discover.dart';
 import 'package:passmate/attraction_navigator.dart';
 import 'package:passmate/attraction_view.dart';
@@ -16,6 +18,8 @@ import 'package:passmate/permissions-screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:passmate/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -44,7 +48,7 @@ void main() async {
 
   print('User granted permission: ${settings.authorizationStatus}');
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
 
@@ -53,7 +57,27 @@ void main() async {
     }
   });
 
+  final userOffersProvider = UserOffersProvider();
+
   bool isInitialRouteUpdated = false;
+
+  // Initialize flutter_background_geolocation
+  bg.BackgroundGeolocation.onLocation((bg.Location location) {
+    // Handle the background location update
+    // Access location.latitude and location.longitude for the coordinates
+  });
+
+  bg.BackgroundGeolocation.ready(bg.Config(
+    desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+    distanceFilter: 10,
+    stopOnTerminate: false,
+    startOnBoot: true,
+  )).then((bg.State state) {
+    if (!state.enabled) {
+      // Start background geolocation
+      bg.BackgroundGeolocation.start();
+    }
+  });
 
   runApp(
     MaterialApp(

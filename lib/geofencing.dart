@@ -1,4 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:rxdart/rxdart.dart';
+import 'package:rx_shared_preferences/rx_shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -10,11 +16,48 @@ enum GeofenceEvent {
 class GeoFencing {
   String geofenceState = 'N/A';
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  late String notificationTitle;
+  late String geofenceNotificationTitle;
   late String geofenceNotificationBody;
+  late Set<String> displayedNotificationIds;
+  List<Map<String, dynamic>> userOffers = [];
+  Set<String> registeredGeofences = {};
+  Function(List<Map<String, dynamic>>) onUserOffersUpdated = (userOffers) {};
+  StreamController<List<Map<String, dynamic>>> _userOffersController =
+      StreamController<List<Map<String, dynamic>>>();
 
-  void init() {
+  late Stream<List<Map<String, dynamic>>> userOffersStream =
+      _userOffersController.stream;
+
+  // Method to update userOffers and notify listeners
+  void updateUserOffers(List<Map<String, dynamic>> updatedUserOffers) {
+    userOffers = [...updatedUserOffers];
+    // _userOffersController.add(userOffers);
+    _userOffersController.sink
+        .add(userOffers); // Notify listeners of the updated list
+    print('Updated userOffers: $userOffers');
+  }
+
+  GeoFencing() {
+    _userOffersController = BehaviorSubject<List<Map<String, dynamic>>>.seeded(
+      userOffers,
+    );
+
+    // Listen to userOffersStream and print the streamed values
+    // userOffersStream.listen((offers) {
+    //   log('Streamed userOffers: $offers');
+    // });
+  }
+
+  void dispose() {
+    _userOffersController.close();
+  }
+
+  Future<void> init() async {
     initPlatformState();
+    displayedNotificationIds = <String>{};
+    await retrieveNotificationIds();
+    await retrieveUserOffers();
+    print(retrieveNotificationIds().toString());
   }
 
   Future<void> initPlatformState() async {
@@ -49,7 +92,14 @@ class GeoFencing {
   void registerLocationNotifications(
       List<Map<String, dynamic>> locationNotifications) {
     for (var locationNotification in locationNotifications) {
-      registerGeofence(locationNotification);
+      final String notificationId = locationNotification['id'].toString();
+      log(locationNotification.toString());
+      if (!displayedNotificationIds.contains(notificationId) &&
+          !registeredGeofences.contains(notificationId)) {
+        registerGeofence(locationNotification);
+        registeredGeofences
+            .add(notificationId); // Add registered geofence to set
+      }
     }
   }
 
@@ -58,6 +108,7 @@ class GeoFencing {
     final double longitude = locationNotification['position']['longitude'];
     final double radius = locationNotification['radius'];
     geofenceNotificationBody = locationNotification['message'];
+    geofenceNotificationTitle = locationNotification['title'];
     bool isInsideGeofence = false; // Flag to track geofence state
 
     print("Attempting to register: ${locationNotification['id']}");
@@ -71,37 +122,105 @@ class GeoFencing {
       );
 
       if (distance <= radius && !isInsideGeofence) {
-        handleGeofenceEvent(locationNotification['id'], GeofenceEvent.enter);
+        handleGeofenceEvent(locationNotification['id'], GeofenceEvent.enter,
+            locationNotification);
         isInsideGeofence = true; // Set the flag to true when entering geofence
       } else if (distance > radius && isInsideGeofence) {
-        handleGeofenceEvent(locationNotification['id'], GeofenceEvent.exit);
+        handleGeofenceEvent(locationNotification['id'], GeofenceEvent.exit,
+            locationNotification);
         isInsideGeofence = false; // Set the flag to false when exiting geofence
       }
     });
   }
 
-  void handleGeofenceEvent(String id, GeofenceEvent event) {
+  void handleGeofenceEvent(String id, GeofenceEvent event,
+      Map<String, dynamic> locationNotification) {
     print('Geofence Event: ID: $id, Event: $event');
 
     late String notificationTitle;
     late String notificationBody;
 
     if (event == GeofenceEvent.enter) {
-      notificationTitle = geofenceNotificationBody;
-      notificationBody = "You're gonna love it here!";
+      notificationTitle = locationNotification['title'];
+      notificationBody = locationNotification['message'];
     } else if (event == GeofenceEvent.exit) {
       notificationTitle = 'Geofence Exited';
       notificationBody = 'You\'ve now exited the geofence.';
     }
 
-    displayNotification(notificationTitle, notificationBody);
+    // Check if the notification with the ID has already been displayed
+    if (!displayedNotificationIds.contains(id)) {
+      displayNotification(id, notificationTitle, notificationBody);
+      displayedNotificationIds.add(id);
+    } else {
+      print('Notification already shown');
+    }
+
+    // Store dismissed notification in the separate list
+    if (event == GeofenceEvent.enter) {
+      userOffers.add(locationNotification);
+      storeUserOffers();
+      GeoFencing().updateUserOffers(userOffers);
+      _userOffersController.sink
+          .add(userOffers); // Notify listeners of the updated list
+      print('This is how many offers you have - ${userOffers.length}');
+
+      // Notify the callback function with the updated userOffers
+      if (onUserOffersUpdated != null) {
+        onUserOffersUpdated(userOffers);
+      }
+    }
   }
 
-  void displayNotification(String title, String body) async {
+  void storeNotificationId(String notificationId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Set<String>? storedIds =
+        prefs.getStringList('displayedNotificationIds')?.toSet();
+    storedIds ??= <String>{};
+    storedIds.add(notificationId);
+    await prefs.setStringList('displayedNotificationIds', storedIds.toList());
+    displayedNotificationIds =
+        storedIds; // Update the displayedNotificationIds set
+    print('Notification stored: $notificationId');
+  }
+
+  Future<void> retrieveNotificationIds() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? storedIds = prefs.getStringList('displayedNotificationIds');
+    if (storedIds != null) {
+      displayedNotificationIds = storedIds.toSet();
+      print('Retrieved notification IDs: $displayedNotificationIds');
+    }
+  }
+
+  Future<void> storeUserOffers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userOffers', jsonEncode(userOffers));
+    print('User offers stored');
+  }
+
+  Future<void> retrieveUserOffers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedUserOffers = prefs.getString('userOffers');
+    if (storedUserOffers != null) {
+      userOffers =
+          List<Map<String, dynamic>>.from(jsonDecode(storedUserOffers));
+      _userOffersController
+          .add(userOffers); // Notify listeners of the updated list
+      print('Retrieved user offers: $userOffers');
+    }
+  }
+
+  Future<int?> getNotificationId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? notificationId = prefs.getInt('notificationId');
+    return notificationId;
+  }
+
+  void displayNotification(String id, String title, String body) async {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'geofence_channel',
       'Geofence Channel',
-      // 'Channel for geofence notifications',
       importance: Importance.high,
       priority: Priority.high,
     );
@@ -110,11 +229,19 @@ class GeoFencing {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      platformChannelSpecifics,
-    );
+    if (!displayedNotificationIds.contains(id)) {
+      displayedNotificationIds
+          .add(id); // Add the ID to the set before displaying the notification
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        title,
+        body,
+        platformChannelSpecifics,
+      );
+      storeNotificationId(id); // Store the updated set with the new ID
+      print('Notification stored after shown: $id');
+    } else {
+      print('Notification already shown');
+    }
   }
 }
